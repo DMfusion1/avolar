@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b1f3a">
+<title>AVolar</title>
+<style>
+  :root{
+    --azul:#0b1f3a; --azul2:#12315c; --cielo:#3d7dca; --acento:#f5a623;
+    --ok:#2e9e5b; --stop:#d0453b; --texto:#eef4fb; --tenue:#9fb4d0; --card:#132a4d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(120% 100% at 50% 0%,#12315c 0%,#0b1f3a 60%,#081627 100%);
+    color:var(--texto); min-height:100dvh; display:flex; flex-direction:column;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
+  .wrap{flex:1; width:100%; max-width:480px; margin:0 auto; padding:20px; display:flex; flex-direction:column}
+  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
+  .logo{display:flex; align-items:center; gap:9px; font-weight:700; font-size:20px; letter-spacing:.5px}
+  .logo .mark{font-size:22px}
+  .hidden{display:none !important}
+
+  /* Login */
+  #login{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:22px}
+  #login .hero{font-size:26px; font-weight:700; line-height:1.25}
+  #login .sub{color:var(--tenue); font-size:15px; max-width:280px}
+  .gbtn-box{min-height:44px}
+
+  /* Reloj Zulu */
+  .zulu{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px 18px; text-align:center; margin:10px 0 18px}
+  .zulu .lbl{color:var(--tenue); font-size:12px; text-transform:uppercase; letter-spacing:1.5px}
+  .zulu .val{font-size:40px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px}
+  .zulu .val small{font-size:18px; color:var(--cielo); font-weight:600}
+
+  /* Boton grande */
+  .accion{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px}
+  .bigbtn{
+    width:220px; height:220px; border-radius:50%; border:none; cursor:pointer;
+    font-size:38px; font-weight:800; letter-spacing:2px; color:#fff;
+    display:flex; align-items:center; justify-content:center; position:relative;
+    box-shadow:0 12px 34px rgba(0,0,0,.4); transition:transform .08s ease;
+  }
+  .bigbtn:active{transform:scale(.96)}
+  .bigbtn.start{background:radial-gradient(circle at 50% 35%,#37b86e,#1f8a4d); box-shadow:0 12px 40px rgba(46,158,91,.5)}
+  .bigbtn.stop{background:radial-gradient(circle at 50% 35%,#e0574c,#b7362c); box-shadow:0 12px 40px rgba(208,69,59,.5)}
+  .pulse::after{content:""; position:absolute; inset:-6px; border-radius:50%; border:3px solid rgba(224,87,76,.5); animation:pulse 1.8s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.18);opacity:0}}
+
+  .encurso{text-align:center}
+  .encurso .estado{color:var(--acento); font-weight:700; text-transform:uppercase; letter-spacing:2px; font-size:13px}
+  .cron{font-size:52px; font-weight:700; font-variant-numeric:tabular-nums; margin:6px 0}
+  .metas{display:flex; gap:14px; justify-content:center; color:var(--tenue); font-size:14px}
+  .metas b{color:var(--texto); font-variant-numeric:tabular-nums}
+  .decimas{margin-top:8px; font-size:15px; color:var(--cielo)}
+  .decimas b{color:var(--texto); font-size:22px}
+
+  /* Resumen */
+  .resumen{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:20px; text-align:center}
+  .resumen h3{font-size:16px; margin-bottom:14px; color:var(--acento)}
+  .resumen .grid{display:flex; justify-content:space-around; gap:10px}
+  .resumen .cell .k{color:var(--tenue); font-size:12px; text-transform:uppercase; letter-spacing:1px}
+  .resumen .cell .v{font-size:24px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px}
+  .resumen .dur .v{color:var(--acento)}
+
+  .linkbtn{background:none; border:none; color:var(--tenue); font-size:14px; cursor:pointer; padding:8px 12px; text-decoration:underline}
+  .ghost{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); color:var(--texto); border-radius:12px; padding:13px 20px; font-size:15px; font-weight:600; cursor:pointer; width:100%}
+  .foot{display:flex; align-items:center; justify-content:space-between; margin-top:14px; color:var(--tenue); font-size:13px}
+  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#1c395f; border:1px solid rgba(255,255,255,.14); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; transition:opacity .25s; pointer-events:none; z-index:50; max-width:90%}
+  .toast.show{opacity:1}
+  .spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;display:inline-block;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><span class="mark">✈️</span><span>AVolar</span></div>
+    <button id="btnLogout" class="linkbtn hidden" onclick="logout()">Salir</button>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login">
+    <div class="hero">Tu libro de vuelo,<br>siempre a mano</div>
+    <div class="sub">Cronometrá tus vuelos y llevá tu bitácora ANAC desde el celular.</div>
+    <div class="gbtn-box">
+      <div id="g_id_onload"
+           data-client_id="PENDIENTE_CLIENT_ID"
+           data-callback="handleCredentialResponse"
+           data-auto_prompt="false"></div>
+      <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue"
+           data-text="continue_with" data-size="large" data-locale="es-419"></div>
+    </div>
+    <div id="loginMsg" class="sub"></div>
+  </section>
+
+  <!-- APP / CRONOMETRO -->
+  <section id="app" class="hidden" style="flex:1;display:flex;flex-direction:column">
+    <div class="zulu">
+      <div class="lbl">Hora Zulu (UTC)</div>
+      <div class="val"><span id="zuluClock">----</span> <small>Z</small></div>
+    </div>
+
+    <!-- estado sin vuelo -->
+    <div id="vistaIdle" class="accion">
+      <button class="bigbtn start" onclick="doStart()">START</button>
+      <div style="color:var(--tenue);font-size:14px">Apretá al despegar</div>
+    </div>
+
+    <!-- estado en vuelo -->
+    <div id="vistaVuelo" class="accion hidden">
+      <div class="encurso">
+        <div class="estado">● Vuelo en curso</div>
+        <div class="cron" id="cron">00:00:00</div>
+        <div class="metas">Salida <b id="mSalida">----</b> Z</div>
+        <div class="decimas">Duración parcial <b id="mDecimas">0.0</b></div>
+      </div>
+      <button class="bigbtn stop pulse" onclick="doStop()">STOP</button>
+      <button class="linkbtn" onclick="doDescartar()">Descartar este vuelo</button>
+    </div>
+
+    <!-- resumen post stop -->
+    <div id="vistaResumen" class="accion hidden">
+      <div class="resumen">
+        <h3>Vuelo terminado ✔</h3>
+        <div class="grid">
+          <div class="cell"><div class="k">Salida</div><div class="v"><span id="rSalida">----</span></div></div>
+          <div class="cell"><div class="k">Llegada</div><div class="v"><span id="rLlegada">----</span></div></div>
+          <div class="cell dur"><div class="k">Duración</div><div class="v" id="rDuracion">0.0</div></div>
+        </div>
+      </div>
+      <div style="color:var(--tenue);font-size:13px;text-align:center">Quedó guardado como borrador.<br>La carga completa del vuelo llega en la próxima etapa.</div>
+      <button class="ghost" onclick="nuevoVuelo()">Listo</button>
+    </div>
+
+    <div class="foot">
+      <span id="pilotoNom">—</span>
+      <span id="netEstado"></span>
+    </div>
+  </section>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+/* ======= CONFIG ======= */
+const CLIENT_ID = 'PENDIENTE_CLIENT_ID';           // <-- se completa al crear el Client ID en Google Cloud
+const API = 'https://n8n.srv969614.hstgr.cloud/webhook';
+/* ====================== */
+
+let token = localStorage.getItem('av_token') || null;
+let usuario = JSON.parse(localStorage.getItem('av_usuario') || 'null');
+let vuelo = null;            // {vuelo_id, inicio_utc, hora_salida_z}
+let tickTimer = null;
+
+/* --- helpers --- */
+function $(id){return document.getElementById(id)}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+function show(id){['login','app'].forEach(s=>$(s).classList.toggle('hidden',s!==id))}
+function vista(v){['vistaIdle','vistaVuelo','vistaResumen'].forEach(x=>$(x).classList.toggle('hidden',x!==v))}
+
+async function api(path, body){
+  body = body || {};
+  if(token) body.token = token;
+  const r = await fetch(API + '/' + path, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+  });
+  return r.json();
+}
+
+/* --- reloj zulu --- */
+function pad(n){return String(n).padStart(2,'0')}
+function zulu(){
+  const d = new Date();
+  $('zuluClock').textContent = pad(d.getUTCHours())+pad(d.getUTCMinutes());
+}
+setInterval(zulu, 1000); zulu();
+
+/* --- login google --- */
+async function handleCredentialResponse(resp){
+  $('loginMsg').innerHTML = '<span class="spin"></span>';
+  try{
+    const res = await fetch(API + '/avolar-login-google', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({credential: resp.credential})
+    }).then(r=>r.json());
+    if(res.ok){
+      token = res.token; usuario = res.usuario;
+      localStorage.setItem('av_token', token);
+      localStorage.setItem('av_usuario', JSON.stringify(usuario));
+      $('loginMsg').textContent='';
+      entrar();
+    } else {
+      $('loginMsg').textContent = res.error || 'No se pudo iniciar sesión';
+    }
+  }catch(e){ $('loginMsg').textContent = 'Error de conexión'; }
+}
+
+function logout(){
+  api('avolar-logout',{}).catch(()=>{});
+  token=null; usuario=null; vuelo=null;
+  localStorage.removeItem('av_token'); localStorage.removeItem('av_usuario');
+  clearInterval(tickTimer);
+  $('btnLogout').classList.add('hidden');
+  show('login');
+}
+
+/* --- app --- */
+async function entrar(){
+  show('app');
+  $('btnLogout').classList.remove('hidden');
+  $('pilotoNom').textContent = usuario ? usuario.nombre : '';
+  await refrescarEstado();
+}
+
+async function refrescarEstado(){
+  const res = await api('avolar-timer-status',{});
+  if(res && res.ok){
+    if(res.en_vuelo){ vuelo = res.vuelo; enCurso(); }
+    else { vuelo=null; vista('vistaIdle'); clearInterval(tickTimer); }
+  } else {
+    // token vencido
+    logout();
+  }
+}
+
+async function doStart(){
+  vista('vistaIdle'); toast('Iniciando…');
+  const res = await api('avolar-timer-start',{});
+  if(res && res.ok){ vuelo = res.vuelo; enCurso(); }
+  else toast('No se pudo iniciar');
+}
+
+function enCurso(){
+  vista('vistaVuelo');
+  $('mSalida').textContent = vuelo.hora_salida_z || '----';
+  clearInterval(tickTimer);
+  tick(); tickTimer = setInterval(tick, 1000);
+}
+
+function tick(){
+  if(!vuelo) return;
+  const ini = new Date(vuelo.inicio_utc + 'Z').getTime();
+  let s = Math.max(0, Math.floor((Date.now() - ini)/1000));
+  const h = Math.floor(s/3600); s-=h*3600;
+  const m = Math.floor(s/60); const seg = s-m*60;
+  $('cron').textContent = pad(h)+':'+pad(m)+':'+pad(seg);
+  const mins = (Date.now()-ini)/60000;
+  $('mDecimas').textContent = (Math.round((mins/60)*10)/10).toFixed(1);
+}
+
+async function doStop(){
+  if(!vuelo) return;
+  if(!confirm('¿Terminar el vuelo?')) return;
+  clearInterval(tickTimer); toast('Cerrando…');
+  const res = await api('avolar-timer-stop',{vuelo_id: vuelo.vuelo_id});
+  if(res && res.ok){
+    $('rSalida').textContent = res.vuelo.hora_salida_z;
+    $('rLlegada').textContent = res.vuelo.hora_llegada_z;
+    $('rDuracion').textContent = Number(res.vuelo.duracion).toFixed(1);
+    vista('vistaResumen');
+  } else { toast('No se pudo cerrar'); enCurso(); }
+}
+
+async function doDescartar(){
+  if(!vuelo) return;
+  if(!confirm('¿Descartar este vuelo? No se guarda nada.')) return;
+  clearInterval(tickTimer);
+  const res = await api('avolar-timer-descartar',{vuelo_id: vuelo.vuelo_id});
+  vuelo=null; vista('vistaIdle');
+  toast(res && res.ok ? 'Vuelo descartado' : 'Listo');
+}
+
+function nuevoVuelo(){ vuelo=null; vista('vistaIdle'); }
+
+/* --- arranque --- */
+if(token){ entrar(); } else { show('login'); }
+</script>
+</body>
+</html>
