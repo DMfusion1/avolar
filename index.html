@@ -16,7 +16,7 @@
 <style>
   :root{
     --azul:#0b1f3a; --azul2:#12315c; --cielo:#3d7dca; --acento:#f5a623;
-    --ok:#2e9e5b; --stop:#d0453b; --texto:#eef4fb; --tenue:#9fb4d0; --card:#132a4d;
+    --ok:#2e9e5b; --stop:#d0453b; --texto:#eef4fb; --tenue:#9fb4d0; --card:#132a4d; --linea:rgba(255,255,255,.08);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
@@ -24,64 +24,129 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:radial-gradient(120% 100% at 50% 0%,#12315c 0%,#0b1f3a 60%,#081627 100%);
     color:var(--texto); min-height:100dvh; display:flex; flex-direction:column;
-    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    padding:env(safe-area-inset-top) 0 0;
   }
-  .wrap{flex:1; width:100%; max-width:480px; margin:0 auto; padding:20px; display:flex; flex-direction:column}
-  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
-  .logo{display:flex; align-items:center; gap:9px; font-weight:700; font-size:20px; letter-spacing:.5px}
+  .wrap{flex:1; width:100%; max-width:480px; margin:0 auto; padding:18px 18px 0; display:flex; flex-direction:column; position:relative}
+  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+  .logo{display:flex; align-items:center; gap:9px; font-weight:700; font-size:19px; letter-spacing:.3px}
   .logo .mark{width:28px;height:28px;border-radius:8px;object-fit:cover;display:block}
-  .hero-icon{width:104px;height:104px;border-radius:24px;object-fit:cover;box-shadow:0 14px 38px rgba(0,0,0,.5);margin-bottom:6px}
   .hidden{display:none !important}
+  .spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;display:inline-block;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
 
   /* Login */
-  #login{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:22px}
+  #login{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:20px; padding-bottom:40px}
+  .hero-icon{width:104px;height:104px;border-radius:24px;object-fit:cover;box-shadow:0 14px 38px rgba(0,0,0,.5);margin-bottom:6px}
   #login .hero{font-size:26px; font-weight:700; line-height:1.25}
-  #login .sub{color:var(--tenue); font-size:15px; max-width:280px}
-  .gbtn-box{min-height:44px}
+  #login .sub{color:var(--tenue); font-size:15px; max-width:290px}
+
+  /* App shell */
+  #appShell{flex:1; display:flex; flex-direction:column; padding-bottom:78px}
+  .screen{flex:1; display:flex; flex-direction:column}
 
   /* Reloj Zulu */
-  .zulu{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px 18px; text-align:center; margin:10px 0 18px}
-  .zulu .lbl{color:var(--tenue); font-size:12px; text-transform:uppercase; letter-spacing:1.5px}
-  .zulu .val{font-size:40px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px}
-  .zulu .val small{font-size:18px; color:var(--cielo); font-weight:600}
+  .zulu{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:14px 18px; text-align:center; margin-bottom:16px}
+  .zulu .lbl{color:var(--tenue); font-size:11px; text-transform:uppercase; letter-spacing:1.5px}
+  .zulu .val{font-size:38px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px}
+  .zulu .val small{font-size:17px; color:var(--cielo); font-weight:600}
 
   /* Boton grande */
-  .accion{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px}
-  .bigbtn{
-    width:220px; height:220px; border-radius:50%; border:none; cursor:pointer;
-    font-size:38px; font-weight:800; letter-spacing:2px; color:#fff;
-    display:flex; align-items:center; justify-content:center; position:relative;
-    box-shadow:0 12px 34px rgba(0,0,0,.4); transition:transform .08s ease;
-  }
+  .accion{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px}
+  .bigbtn{width:210px; height:210px; border-radius:50%; border:none; cursor:pointer; font-size:36px; font-weight:800; letter-spacing:2px; color:#fff; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 12px 34px rgba(0,0,0,.4); transition:transform .08s ease}
   .bigbtn:active{transform:scale(.96)}
   .bigbtn.start{background:radial-gradient(circle at 50% 35%,#37b86e,#1f8a4d); box-shadow:0 12px 40px rgba(46,158,91,.5)}
   .bigbtn.stop{background:radial-gradient(circle at 50% 35%,#e0574c,#b7362c); box-shadow:0 12px 40px rgba(208,69,59,.5)}
   .pulse::after{content:""; position:absolute; inset:-6px; border-radius:50%; border:3px solid rgba(224,87,76,.5); animation:pulse 1.8s ease-out infinite}
   @keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.18);opacity:0}}
-
   .encurso{text-align:center}
   .encurso .estado{color:var(--acento); font-weight:700; text-transform:uppercase; letter-spacing:2px; font-size:13px}
-  .cron{font-size:52px; font-weight:700; font-variant-numeric:tabular-nums; margin:6px 0}
-  .metas{display:flex; gap:14px; justify-content:center; color:var(--tenue); font-size:14px}
+  .cron{font-size:50px; font-weight:700; font-variant-numeric:tabular-nums; margin:6px 0}
+  .metas{color:var(--tenue); font-size:14px}
   .metas b{color:var(--texto); font-variant-numeric:tabular-nums}
-  .decimas{margin-top:8px; font-size:15px; color:var(--cielo)}
+  .decimas{margin-top:6px; font-size:15px; color:var(--cielo)}
   .decimas b{color:var(--texto); font-size:22px}
 
   /* Resumen */
-  .resumen{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:20px; text-align:center}
-  .resumen h3{font-size:16px; margin-bottom:14px; color:var(--acento)}
-  .resumen .grid{display:flex; justify-content:space-around; gap:10px}
-  .resumen .cell .k{color:var(--tenue); font-size:12px; text-transform:uppercase; letter-spacing:1px}
-  .resumen .cell .v{font-size:24px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px}
+  .resumen{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:18px; text-align:center; width:100%}
+  .resumen h3{font-size:16px; margin-bottom:12px; color:var(--acento)}
+  .resumen .grid{display:flex; justify-content:space-around; gap:8px}
+  .resumen .cell .k{color:var(--tenue); font-size:11px; text-transform:uppercase; letter-spacing:1px}
+  .resumen .cell .v{font-size:23px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px}
   .resumen .dur .v{color:var(--acento)}
 
+  /* Titulos de pantalla */
+  .scrhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+  .scrhead h2{font-size:20px; font-weight:700}
+  .scrhead .count{color:var(--tenue); font-size:13px}
+
+  /* Botones */
+  .btn{border:none; border-radius:12px; padding:13px 18px; font-size:15px; font-weight:600; cursor:pointer; width:100%; transition:filter .1s}
+  .btn:active{filter:brightness(.9)}
+  .btn.primary{background:linear-gradient(180deg,#4a90e2,#2f6fbf); color:#fff}
+  .btn.green{background:linear-gradient(180deg,#37b86e,#1f8a4d); color:#fff}
+  .btn.ghost{background:rgba(255,255,255,.07); border:1px solid var(--linea); color:var(--texto)}
+  .btn.danger{background:rgba(208,69,59,.15); border:1px solid rgba(208,69,59,.4); color:#f2a59e}
+  .btn.sm{padding:9px 12px; font-size:13px; width:auto}
   .linkbtn{background:none; border:none; color:var(--tenue); font-size:14px; cursor:pointer; padding:8px 12px; text-decoration:underline}
-  .ghost{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); color:var(--texto); border-radius:12px; padding:13px 20px; font-size:15px; font-weight:600; cursor:pointer; width:100%}
-  .foot{display:flex; align-items:center; justify-content:space-between; margin-top:14px; color:var(--tenue); font-size:13px}
-  .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#1c395f; border:1px solid rgba(255,255,255,.14); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; transition:opacity .25s; pointer-events:none; z-index:50; max-width:90%}
+  .fab{background:var(--acento); color:#3a2600; font-weight:700}
+
+  /* Cards / listas */
+  .card{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:14px 16px; margin-bottom:12px}
+  .totgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px 8px}
+  .tot .k{color:var(--tenue); font-size:10.5px; text-transform:uppercase; letter-spacing:.5px}
+  .tot .v{font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:1px}
+  .tot .v.big{color:var(--acento); font-size:24px}
+
+  .listwrap{}
+  .row{background:var(--card); border:1px solid var(--linea); border-radius:14px; padding:12px 14px; margin-bottom:9px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .row:active{background:#173156}
+  .row .main{min-width:0}
+  .row .r1{font-weight:600; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .row .r2{color:var(--tenue); font-size:12.5px; margin-top:2px}
+  .row .dur{text-align:right; flex-shrink:0}
+  .row .dur .d{font-size:19px; font-weight:700; color:var(--cielo); font-variant-numeric:tabular-nums}
+  .row .dur .a{font-size:10.5px; color:var(--tenue)}
+  .pill{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:20px; background:rgba(245,166,35,.18); color:var(--acento); margin-left:6px; vertical-align:middle}
+  .vacio{text-align:center; color:var(--tenue); font-size:14px; padding:40px 20px}
+
+  /* Filtros */
+  .filtros{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap}
+  .filtros select,.filtros input{flex:1; min-width:90px}
+
+  /* Forms */
+  .field{margin-bottom:13px}
+  .field.row2{display:flex; gap:10px}
+  .field.row2>div{flex:1}
+  label{display:block; color:var(--tenue); font-size:12.5px; margin-bottom:5px; font-weight:600}
+  input,select,textarea{width:100%; background:#0e2545; border:1px solid var(--linea); border-radius:10px; padding:11px 12px; color:var(--texto); font-size:15px; font-family:inherit}
+  input:focus,select,textarea:focus{outline:none; border-color:var(--cielo)}
+  textarea{resize:vertical; min-height:60px}
+  select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239fb4d0' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px}
+  .seg{display:flex; gap:0; border:1px solid var(--linea); border-radius:10px; overflow:hidden}
+  .seg button{flex:1; background:#0e2545; border:none; color:var(--tenue); padding:10px; font-size:14px; font-weight:600; cursor:pointer}
+  .seg button.on{background:var(--cielo); color:#04203f}
+  .hint{color:var(--tenue); font-size:12px; margin-top:6px}
+  .warn{color:#f2c14e; font-size:12.5px; margin-top:6px}
+  details.adv{margin:6px 0 13px; border:1px solid var(--linea); border-radius:10px; padding:0 12px}
+  details.adv summary{cursor:pointer; padding:11px 0; color:var(--cielo); font-size:14px; font-weight:600; list-style:none}
+  details.adv summary::-webkit-details-marker{display:none}
+  .casillas{display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-bottom:12px}
+  .casillas .field{margin:0}
+  .casillas label{font-size:11px}
+  .chkrow{display:flex; align-items:center; gap:9px; margin-bottom:13px}
+  .chkrow input{width:20px;height:20px}
+  .chkrow label{margin:0; color:var(--texto); font-size:15px}
+  .formbtns{display:flex; gap:10px; margin-top:6px}
+  .formbtns .btn{flex:1}
+
+  /* Bottom nav */
+  #bottomNav{position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; display:flex; background:rgba(9,24,44,.96); backdrop-filter:blur(10px); border-top:1px solid var(--linea); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); z-index:40}
+  #bottomNav button{flex:1; background:none; border:none; color:var(--tenue); font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0}
+  #bottomNav button .ic{font-size:20px}
+  #bottomNav button.on{color:var(--acento)}
+
+  .toast{position:fixed; left:50%; bottom:92px; transform:translateX(-50%); background:#1c395f; border:1px solid rgba(255,255,255,.14); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; transition:opacity .25s; pointer-events:none; z-index:60; max-width:90%}
   .toast.show{opacity:1}
-  .spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;display:inline-block;vertical-align:middle}
-  @keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -93,202 +158,495 @@
 
   <!-- LOGIN -->
   <section id="login">
-    <img class="hero-icon" src="/icon-192.png" alt="AVolar">
+    <img class="hero-icon" src="/icon-192.png" alt="Volemos Hoy">
     <div class="hero">Tu libro de vuelo,<br>siempre a mano</div>
     <div class="sub">Cronometrá tus vuelos y llevá tu bitácora ANAC desde el celular.</div>
-    <div class="gbtn-box">
+    <div>
       <div id="g_id_onload"
            data-client_id="808288523555-c7m8vo96u2qig26uf74t2np39insvnav.apps.googleusercontent.com"
-           data-callback="handleCredentialResponse"
-           data-auto_prompt="false"></div>
+           data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
       <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue"
            data-text="continue_with" data-size="large" data-locale="es-419"></div>
     </div>
     <div id="loginMsg" class="sub"></div>
   </section>
 
-  <!-- APP / CRONOMETRO -->
-  <section id="app" class="hidden" style="flex:1;display:flex;flex-direction:column">
-    <div class="zulu">
-      <div class="lbl">Hora Zulu (UTC)</div>
-      <div class="val"><span id="zuluClock">----</span> <small>Z</small></div>
-    </div>
+  <!-- APP -->
+  <div id="appShell" class="hidden">
 
-    <!-- estado sin vuelo -->
-    <div id="vistaIdle" class="accion">
-      <button class="bigbtn start" onclick="doStart()">START</button>
-      <div style="color:var(--tenue);font-size:14px">Apretá al despegar</div>
-    </div>
-
-    <!-- estado en vuelo -->
-    <div id="vistaVuelo" class="accion hidden">
-      <div class="encurso">
-        <div class="estado">● Vuelo en curso</div>
-        <div class="cron" id="cron">00:00:00</div>
-        <div class="metas">Salida <b id="mSalida">----</b> Z</div>
-        <div class="decimas">Duración parcial <b id="mDecimas">0.0</b></div>
+    <!-- CRONOMETRO -->
+    <section id="scrCrono" class="screen">
+      <div class="zulu"><div class="lbl">Hora Zulu (UTC)</div><div class="val"><span id="zuluClock">----</span> <small>Z</small></div></div>
+      <div id="vistaIdle" class="accion">
+        <button class="bigbtn start" onclick="doStart()">START</button>
+        <div style="color:var(--tenue);font-size:14px">Apretá al despegar</div>
       </div>
-      <button class="bigbtn stop pulse" onclick="doStop()">STOP</button>
-      <button class="linkbtn" onclick="doDescartar()">Descartar este vuelo</button>
-    </div>
+      <div id="vistaVuelo" class="accion hidden">
+        <div class="encurso">
+          <div class="estado">● Vuelo en curso</div>
+          <div class="cron" id="cron">00:00:00</div>
+          <div class="metas">Salida <b id="mSalida">----</b> Z</div>
+          <div class="decimas">Duración parcial <b id="mDecimas">0.0</b></div>
+        </div>
+        <button class="bigbtn stop pulse" onclick="doStop()">STOP</button>
+        <button class="linkbtn" onclick="doDescartar()">Descartar este vuelo</button>
+      </div>
+      <div id="vistaResumen" class="accion hidden">
+        <div class="resumen">
+          <h3>Vuelo terminado ✔</h3>
+          <div class="grid">
+            <div class="cell"><div class="k">Salida</div><div class="v"><span id="rSalida">----</span></div></div>
+            <div class="cell"><div class="k">Llegada</div><div class="v"><span id="rLlegada">----</span></div></div>
+            <div class="cell dur"><div class="k">Duración</div><div class="v" id="rDuracion">0.0</div></div>
+          </div>
+        </div>
+        <button class="btn green" onclick="completarDesdeCrono()">Completar vuelo ahora</button>
+        <button class="linkbtn" onclick="masTarde()">Más tarde (queda como borrador)</button>
+      </div>
+    </section>
 
-    <!-- resumen post stop -->
-    <div id="vistaResumen" class="accion hidden">
-      <div class="resumen">
-        <h3>Vuelo terminado ✔</h3>
-        <div class="grid">
-          <div class="cell"><div class="k">Salida</div><div class="v"><span id="rSalida">----</span></div></div>
-          <div class="cell"><div class="k">Llegada</div><div class="v"><span id="rLlegada">----</span></div></div>
-          <div class="cell dur"><div class="k">Duración</div><div class="v" id="rDuracion">0.0</div></div>
+    <!-- LIBRO -->
+    <section id="scrLibro" class="screen hidden">
+      <div class="scrhead"><h2>Libro de vuelo</h2><span class="count" id="libroCount"></span></div>
+      <div id="libroBody"><div class="vacio"><span class="spin"></span></div></div>
+    </section>
+
+    <!-- AERONAVES -->
+    <section id="scrAero" class="screen hidden">
+      <div class="scrhead"><h2>Mis aeronaves</h2><button class="btn primary sm" onclick="openAeroForm(null)">+ Nueva</button></div>
+      <div id="aeroBody" class="listwrap"><div class="vacio"><span class="spin"></span></div></div>
+    </section>
+
+    <!-- FORM AERONAVE -->
+    <section id="scrAeroForm" class="screen hidden">
+      <div class="scrhead"><h2 id="aeroFormTit">Nueva aeronave</h2><button class="linkbtn" onclick="showScreen('scrAero')">Cancelar</button></div>
+      <div class="listwrap">
+        <div class="field"><label>Matrícula *</label><input id="af_matricula" placeholder="LV-HAK"></div>
+        <div class="field"><label>Marca y modelo</label><input id="af_marca_modelo" placeholder="Cessna 152"></div>
+        <div class="field row2">
+          <div><label>Marca (libro)</label><input id="af_marca_libro" placeholder="C152 / ECHO"></div>
+          <div><label>Designador OACI</label><input id="af_tipo_oaci" placeholder="C152"></div>
+        </div>
+        <div class="field row2">
+          <div><label>Clase</label><input id="af_clase" placeholder="MONT T"></div>
+          <div><label>Potencia</label><input id="af_potencia" placeholder="HP152"></div>
+        </div>
+        <details class="adv">
+          <summary>Datos para el plan de vuelo (FPL) — opcional</summary>
+          <div class="field row2">
+            <div><label>Estela turbulenta</label>
+              <select id="af_estela"><option>L</option><option>M</option><option>H</option></select></div>
+            <div><label>Equipo (10a)</label><input id="af_equipo_fpl" placeholder="S"></div>
+          </div>
+          <div class="field row2">
+            <div><label>Vigilancia (10b)</label><input id="af_vigilancia_fpl" placeholder="C"></div>
+            <div><label>Color y marcas</label><input id="af_color_marcas" placeholder="Blanco/azul"></div>
+          </div>
+        </details>
+        <div class="chkrow"><input type="checkbox" id="af_activa" checked><label for="af_activa">Aeronave activa</label></div>
+        <div class="formbtns">
+          <button class="btn green" onclick="saveAero()">Guardar</button>
         </div>
       </div>
-      <div style="color:var(--tenue);font-size:13px;text-align:center">Quedó guardado como borrador.<br>La carga completa del vuelo llega en la próxima etapa.</div>
-      <button class="ghost" onclick="nuevoVuelo()">Listo</button>
-    </div>
+    </section>
 
-    <div class="foot">
-      <span id="pilotoNom">—</span>
-      <span id="netEstado"></span>
-    </div>
-  </section>
+    <!-- FORM VUELO -->
+    <section id="scrVuelo" class="screen hidden">
+      <div class="scrhead"><h2 id="vueloFormTit">Cargar vuelo</h2><button class="linkbtn" onclick="cancelVuelo()">Cancelar</button></div>
+      <div class="listwrap">
+        <div class="field"><label>Fecha</label><input type="date" id="v_fecha"></div>
+        <div class="field row2">
+          <div><label>Hora salida (Z)</label><input id="v_hsal" inputmode="numeric" maxlength="4" placeholder="1340"></div>
+          <div><label>Hora llegada (Z)</label><input id="v_hlleg" inputmode="numeric" maxlength="4" placeholder="1450"></div>
+        </div>
+        <div class="field row2">
+          <div><label>Desde</label><input id="v_desde" placeholder="MOR" oninput="sugerirCategoria()"></div>
+          <div><label>Hacia</label><input id="v_hacia" placeholder="GEZ" oninput="sugerirCategoria()"></div>
+        </div>
+        <div class="field"><label>Aeronave</label>
+          <select id="v_aeronave" onchange="autofillAeronave()"><option value="">— elegir —</option></select>
+        </div>
+        <div class="field"><label>Finalidad</label>
+          <input id="v_finalidad" list="finalidades" placeholder="ENT">
+          <datalist id="finalidades">
+            <option value="ENT">Entrenamiento</option><option value="VP">Vuelo privado</option>
+            <option value="NAV">Navegación</option><option value="INS">Instrucción</option>
+            <option value="NOCT">Nocturno</option><option value="CHE">Cheque</option>
+          </datalist>
+        </div>
+        <div class="field"><label>Duración (décimas)</label>
+          <input id="v_duracion" inputmode="decimal" placeholder="1.2" oninput="volcar()">
+          <div class="hint" id="durHint"></div>
+        </div>
+        <div class="field"><label>¿Dónde va la duración?</label>
+          <div class="seg" id="segCat">
+            <button type="button" data-v="sad" onclick="setSeg('cat','sad')">Sobre AD</button>
+            <button type="button" data-v="trav" onclick="setSeg('cat','trav')">Travesía</button>
+          </div>
+        </div>
+        <div class="field row2">
+          <div><div class="seg" id="segMom">
+            <button type="button" data-v="dia" onclick="setSeg('mom','dia')">Día</button>
+            <button type="button" data-v="noche" onclick="setSeg('mom','noche')">Noche</button>
+          </div></div>
+          <div><div class="seg" id="segRol">
+            <button type="button" data-v="pil" onclick="setSeg('rol','pil')">Piloto</button>
+            <button type="button" data-v="cop" onclick="setSeg('rol','cop')">Copiloto</button>
+          </div></div>
+        </div>
+        <div class="warn hidden" id="volcadoWarn"></div>
+        <div class="field"><label>Aterrizajes</label><input id="v_aterrizajes" inputmode="numeric" placeholder="1"></div>
+
+        <details class="adv" id="advCasillas">
+          <summary>Repartir horas a mano (avanzado)</summary>
+          <div class="casillas">
+            <div class="field"><label>Sobre AD día pil.</label><input class="cas" id="c_sad_dia_pil" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Sobre AD día cop.</label><input class="cas" id="c_sad_dia_cop" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Sobre AD noche pil.</label><input class="cas" id="c_sad_noche_pil" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Sobre AD noche cop.</label><input class="cas" id="c_sad_noche_cop" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Travesía día pil.</label><input class="cas" id="c_trav_dia_pil" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Travesía día cop.</label><input class="cas" id="c_trav_dia_cop" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Travesía noche pil.</label><input class="cas" id="c_trav_noche_pil" inputmode="decimal" oninput="chkVolcado()"></div>
+            <div class="field"><label>Travesía noche cop.</label><input class="cas" id="c_trav_noche_cop" inputmode="decimal" oninput="chkVolcado()"></div>
+          </div>
+        </details>
+        <details class="adv">
+          <summary>Otras categorías — opcional</summary>
+          <div class="casillas">
+            <div class="field"><label>Instrucción</label><input id="v_instruccion" inputmode="decimal"></div>
+            <div class="field"><label>Capota</label><input id="v_capota" inputmode="decimal"></div>
+            <div class="field"><label>Multimotor</label><input id="v_multimotor" inputmode="decimal"></div>
+            <div class="field"><label>Reactor</label><input id="v_reactor" inputmode="decimal"></div>
+            <div class="field"><label>Turbohélice</label><input id="v_turbohelice" inputmode="decimal"></div>
+            <div class="field"><label>Aeroaplicador</label><input id="v_aeroaplicador" inputmode="decimal"></div>
+            <div class="field"><label>Simulador</label><input id="v_simu" inputmode="decimal"></div>
+          </div>
+        </details>
+
+        <div class="chkrow"><input type="checkbox" id="v_foliado"><label for="v_foliado">Foliado</label></div>
+        <div class="field"><label>Comentario</label><textarea id="v_comentario" placeholder="Notas del vuelo"></textarea></div>
+        <div class="formbtns">
+          <button class="btn danger hidden" id="btnBorrarVuelo" onclick="deleteVuelo()">Borrar</button>
+          <button class="btn green" onclick="saveVuelo()">Confirmar vuelo</button>
+        </div>
+      </div>
+    </section>
+
+    <nav id="bottomNav">
+      <button data-scr="scrCrono" onclick="navTo('scrCrono')"><span class="ic">⏱️</span>Cronómetro</button>
+      <button data-scr="scrLibro" onclick="navTo('scrLibro')"><span class="ic">📖</span>Libro</button>
+      <button data-scr="scrAero" onclick="navTo('scrAero')"><span class="ic">🛩️</span>Aeronaves</button>
+    </nav>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-/* ======= CONFIG ======= */
 const CLIENT_ID = '808288523555-c7m8vo96u2qig26uf74t2np39insvnav.apps.googleusercontent.com';
 const API = 'https://n8n.srv969614.hstgr.cloud/webhook';
-/* ====================== */
 
 let token = localStorage.getItem('av_token') || null;
 let usuario = JSON.parse(localStorage.getItem('av_usuario') || 'null');
-let vuelo = null;            // {vuelo_id, inicio_utc, hora_salida_z}
-let tickTimer = null;
+let vuelo = null, tickTimer = null, lastStop = null;
+let aeronaves = [];
+let editVueloId = null;
+let seg = { cat:'sad', mom:'dia', rol:'pil' };
 
-/* --- helpers --- */
-function $(id){return document.getElementById(id)}
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
-function show(id){['login','app'].forEach(s=>$(s).classList.toggle('hidden',s!==id))}
-function vista(v){['vistaIdle','vistaVuelo','vistaResumen'].forEach(x=>$(x).classList.toggle('hidden',x!==v))}
+const $ = (id)=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+function pad(n){return String(n).padStart(2,'0')}
+const NUM=(x)=>{const n=parseFloat(x);return isFinite(n)?n:0};
 
 async function api(path, body){
-  body = body || {};
-  if(token) body.token = token;
-  const r = await fetch(API + '/' + path, {
-    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
-  });
+  body=body||{}; if(token) body.token=token;
+  const r=await fetch(API+'/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   return r.json();
 }
 
-/* --- reloj zulu --- */
-function pad(n){return String(n).padStart(2,'0')}
-function zulu(){
-  const d = new Date();
-  $('zuluClock').textContent = pad(d.getUTCHours())+pad(d.getUTCMinutes());
-}
-setInterval(zulu, 1000); zulu();
+/* reloj */
+function zulu(){const d=new Date();$('zuluClock').textContent=pad(d.getUTCHours())+pad(d.getUTCMinutes())}
+setInterval(zulu,1000); zulu();
 
-/* --- login google --- */
+/* login */
 async function handleCredentialResponse(resp){
-  $('loginMsg').innerHTML = '<span class="spin"></span>';
+  $('loginMsg').innerHTML='<span class="spin"></span>';
   try{
-    const res = await fetch(API + '/avolar-login-google', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({credential: resp.credential})
-    }).then(r=>r.json());
-    if(res.ok){
-      token = res.token; usuario = res.usuario;
-      localStorage.setItem('av_token', token);
-      localStorage.setItem('av_usuario', JSON.stringify(usuario));
-      $('loginMsg').textContent='';
-      entrar();
-    } else {
-      $('loginMsg').textContent = res.error || 'No se pudo iniciar sesión';
-    }
-  }catch(e){ $('loginMsg').textContent = 'Error de conexión'; }
+    const res=await fetch(API+'/avolar-login-google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})}).then(r=>r.json());
+    if(res.ok){token=res.token;usuario=res.usuario;localStorage.setItem('av_token',token);localStorage.setItem('av_usuario',JSON.stringify(usuario));$('loginMsg').textContent='';entrar();}
+    else $('loginMsg').textContent=res.error||'No se pudo iniciar sesión';
+  }catch(e){$('loginMsg').textContent='Error de conexión'}
 }
-
 function logout(){
   api('avolar-logout',{}).catch(()=>{});
-  token=null; usuario=null; vuelo=null;
-  localStorage.removeItem('av_token'); localStorage.removeItem('av_usuario');
-  clearInterval(tickTimer);
-  $('btnLogout').classList.add('hidden');
-  show('login');
+  token=null;usuario=null;vuelo=null;localStorage.removeItem('av_token');localStorage.removeItem('av_usuario');
+  clearInterval(tickTimer);$('btnLogout').classList.add('hidden');
+  $('appShell').classList.add('hidden');$('login').classList.remove('hidden');
 }
 
-/* --- app --- */
+/* navegacion */
+function showScreen(id){
+  ['scrCrono','scrLibro','scrAero','scrAeroForm','scrVuelo'].forEach(s=>$(s).classList.toggle('hidden',s!==id));
+}
+function navTo(id){
+  showScreen(id);
+  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('on',b.dataset.scr===id));
+  if(id==='scrLibro') loadLibro();
+  if(id==='scrAero') loadAeronaves();
+}
 async function entrar(){
-  show('app');
-  $('btnLogout').classList.remove('hidden');
-  $('pilotoNom').textContent = usuario ? usuario.nombre : '';
+  $('login').classList.add('hidden');$('appShell').classList.remove('hidden');$('btnLogout').classList.remove('hidden');
+  navTo('scrCrono');
+  await cargarAeronaves();
   await refrescarEstado();
 }
 
+/* ---- CRONOMETRO ---- */
 async function refrescarEstado(){
-  const res = await api('avolar-timer-status',{});
-  if(res && res.ok){
-    if(res.en_vuelo){ vuelo = res.vuelo; enCurso(); }
-    else { vuelo=null; vista('vistaIdle'); clearInterval(tickTimer); }
-  } else {
-    // token vencido
-    logout();
-  }
+  const res=await api('avolar-timer-status',{});
+  if(res&&res.ok){ if(res.en_vuelo){vuelo=res.vuelo;enCurso();} else {vuelo=null;vista('vistaIdle');clearInterval(tickTimer);} }
+  else logout();
 }
-
+function vista(v){['vistaIdle','vistaVuelo','vistaResumen'].forEach(x=>$(x).classList.toggle('hidden',x!==v))}
 async function doStart(){
-  vista('vistaIdle'); toast('Iniciando…');
-  const res = await api('avolar-timer-start',{});
-  if(res && res.ok){ vuelo = res.vuelo; enCurso(); }
-  else toast('No se pudo iniciar');
+  vista('vistaIdle');toast('Iniciando…');
+  const res=await api('avolar-timer-start',{});
+  if(res&&res.ok){vuelo=res.vuelo;enCurso();} else toast('No se pudo iniciar');
 }
-
-function enCurso(){
-  vista('vistaVuelo');
-  $('mSalida').textContent = vuelo.hora_salida_z || '----';
-  clearInterval(tickTimer);
-  tick(); tickTimer = setInterval(tick, 1000);
-}
-
+function enCurso(){vista('vistaVuelo');$('mSalida').textContent=vuelo.hora_salida_z||'----';clearInterval(tickTimer);tick();tickTimer=setInterval(tick,1000)}
 function tick(){
-  if(!vuelo) return;
-  const ini = new Date(vuelo.inicio_utc + 'Z').getTime();
-  let s = Math.max(0, Math.floor((Date.now() - ini)/1000));
-  const h = Math.floor(s/3600); s-=h*3600;
-  const m = Math.floor(s/60); const seg = s-m*60;
-  $('cron').textContent = pad(h)+':'+pad(m)+':'+pad(seg);
-  const mins = (Date.now()-ini)/60000;
-  $('mDecimas').textContent = (Math.round((mins/60)*10)/10).toFixed(1);
+  if(!vuelo)return;
+  const ini=new Date(vuelo.inicio_utc+'Z').getTime();
+  let s=Math.max(0,Math.floor((Date.now()-ini)/1000));
+  const h=Math.floor(s/3600);s-=h*3600;const m=Math.floor(s/60);const sg=s-m*60;
+  $('cron').textContent=pad(h)+':'+pad(m)+':'+pad(sg);
+  const mins=(Date.now()-ini)/60000;$('mDecimas').textContent=(Math.round((mins/60)*10)/10).toFixed(1);
 }
-
 async function doStop(){
-  if(!vuelo) return;
-  if(!confirm('¿Terminar el vuelo?')) return;
-  clearInterval(tickTimer); toast('Cerrando…');
-  const res = await api('avolar-timer-stop',{vuelo_id: vuelo.vuelo_id});
-  if(res && res.ok){
-    $('rSalida').textContent = res.vuelo.hora_salida_z;
-    $('rLlegada').textContent = res.vuelo.hora_llegada_z;
-    $('rDuracion').textContent = Number(res.vuelo.duracion).toFixed(1);
+  if(!vuelo)return; if(!confirm('¿Terminar el vuelo?'))return;
+  clearInterval(tickTimer);toast('Cerrando…');
+  const res=await api('avolar-timer-stop',{vuelo_id:vuelo.vuelo_id});
+  if(res&&res.ok){
+    lastStop={vuelo_id:res.vuelo.vuelo_id,hora_salida_z:res.vuelo.hora_salida_z,hora_llegada_z:res.vuelo.hora_llegada_z,duracion:res.vuelo.duracion};
+    $('rSalida').textContent=res.vuelo.hora_salida_z;$('rLlegada').textContent=res.vuelo.hora_llegada_z;$('rDuracion').textContent=Number(res.vuelo.duracion).toFixed(1);
     vista('vistaResumen');
-  } else { toast('No se pudo cerrar'); enCurso(); }
+  } else {toast('No se pudo cerrar');enCurso();}
 }
-
 async function doDescartar(){
-  if(!vuelo) return;
-  if(!confirm('¿Descartar este vuelo? No se guarda nada.')) return;
-  clearInterval(tickTimer);
-  const res = await api('avolar-timer-descartar',{vuelo_id: vuelo.vuelo_id});
-  vuelo=null; vista('vistaIdle');
-  toast(res && res.ok ? 'Vuelo descartado' : 'Listo');
+  if(!vuelo)return; if(!confirm('¿Descartar este vuelo? No se guarda nada.'))return;
+  clearInterval(tickTimer);await api('avolar-timer-descartar',{vuelo_id:vuelo.vuelo_id});
+  vuelo=null;vista('vistaIdle');toast('Vuelo descartado');
+}
+function completarDesdeCrono(){
+  const hoy=new Date();
+  openVuelo({vuelo_id:lastStop.vuelo_id, estado:'borrador',
+    anio:hoy.getFullYear(),mes:hoy.getMonth()+1,dia:hoy.getDate(),
+    hora_salida_z:lastStop.hora_salida_z,hora_llegada_z:lastStop.hora_llegada_z,duracion:lastStop.duracion});
+}
+function masTarde(){vuelo=null;vista('vistaIdle');navTo('scrCrono');toast('Quedó como borrador en el Libro')}
+
+/* ---- AERONAVES ---- */
+async function cargarAeronaves(){
+  const res=await api('avolar-aeronaves',{op:'listar'});
+  aeronaves=(res&&res.ok)?res.aeronaves:[];
+  const sel=$('v_aeronave');sel.innerHTML='<option value="">— elegir —</option>'+
+    aeronaves.filter(a=>a.activa!=='no').map(a=>`<option value="${a.aeronave_id}">${a.matricula} · ${a.marca_modelo||a.marca_libro||''}</option>`).join('');
+}
+async function loadAeronaves(){
+  await cargarAeronaves();
+  const b=$('aeroBody');
+  if(!aeronaves.length){b.innerHTML='<div class="vacio">Todavía no cargaste aeronaves.<br>Tocá "+ Nueva" para agregar la primera.</div>';return;}
+  b.innerHTML=aeronaves.map(a=>`<div class="row" onclick='openAeroForm(${JSON.stringify(a.aeronave_id)})'>
+      <div class="main"><div class="r1">${esc(a.matricula)||'(sin matrícula)'} ${a.activa==='no'?'<span class="pill">inactiva</span>':''}</div>
+      <div class="r2">${esc([a.marca_modelo,a.clase,a.potencia].filter(Boolean).join(' · '))||'—'}</div></div>
+      <div class="dur"><div class="a">OACI</div><div class="r1">${esc(a.tipo_oaci)||'—'}</div></div></div>`).join('');
+}
+function openAeroForm(id){
+  const a=id?aeronaves.find(x=>x.aeronave_id===id):null;
+  $('aeroFormTit').textContent=a?'Editar aeronave':'Nueva aeronave';
+  $('af_matricula').value=a?a.matricula||'':'';
+  $('af_marca_modelo').value=a?a.marca_modelo||'':'';
+  $('af_marca_libro').value=a?a.marca_libro||'':'';
+  $('af_tipo_oaci').value=a?a.tipo_oaci||'':'';
+  $('af_clase').value=a?a.clase||'':'';
+  $('af_potencia').value=a?a.potencia||'':'';
+  $('af_estela').value=a?(a.estela||'L'):'L';
+  $('af_equipo_fpl').value=a?a.equipo_fpl||'':'';
+  $('af_vigilancia_fpl').value=a?a.vigilancia_fpl||'':'';
+  $('af_color_marcas').value=a?a.color_marcas||'':'';
+  $('af_activa').checked=a?a.activa!=='no':true;
+  $('scrAeroForm').dataset.editId=a?a.aeronave_id:'';
+  showScreen('scrAeroForm');
+}
+async function saveAero(){
+  const mat=$('af_matricula').value.trim();
+  if(!mat){toast('La matrícula es obligatoria');return;}
+  const id=$('scrAeroForm').dataset.editId;
+  const data={op:id?'editar':'crear',matricula:mat,
+    marca_modelo:$('af_marca_modelo').value.trim(),marca_libro:$('af_marca_libro').value.trim(),
+    tipo_oaci:$('af_tipo_oaci').value.trim(),clase:$('af_clase').value.trim(),potencia:$('af_potencia').value.trim(),
+    estela:$('af_estela').value,equipo_fpl:$('af_equipo_fpl').value.trim(),vigilancia_fpl:$('af_vigilancia_fpl').value.trim(),
+    color_marcas:$('af_color_marcas').value.trim(),activa:$('af_activa').checked?'si':'no'};
+  if(id) data.aeronave_id=id;
+  toast('Guardando…');
+  const res=await api('avolar-aeronaves',data);
+  if(res&&res.ok){toast('Aeronave guardada');await loadAeronaves();showScreen('scrAero');navSetActive('scrAero');}
+  else toast('No se pudo guardar');
+}
+function navSetActive(id){document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('on',b.dataset.scr===id))}
+
+/* ---- LIBRO ---- */
+async function loadLibro(){
+  $('libroBody').innerHTML='<div class="vacio"><span class="spin"></span></div>';
+  const res=await api('avolar-libro',{});
+  if(!res||!res.ok){$('libroBody').innerHTML='<div class="vacio">No se pudo cargar el libro.</div>';return;}
+  window._libro=res;
+  renderLibro(res);
+}
+function renderLibro(res){
+  const t=res.totales||{};
+  $('libroCount').textContent=res.cantidad+' vuelos';
+  const anios=[...new Set(res.vuelos.map(v=>v.anio))].sort((a,b)=>b-a);
+  let html=`<div class="card"><div class="totgrid">
+      <div class="tot"><div class="k">Horas totales</div><div class="v big">${(t.total_general||0).toFixed(1)}</div></div>
+      <div class="tot"><div class="k">Aterrizajes</div><div class="v">${t.aterrizajes||0}</div></div>
+      <div class="tot"><div class="k">Vuelos</div><div class="v">${res.cantidad}</div></div>
+      <div class="tot"><div class="k">S/AD día</div><div class="v">${(t.sad_dia||0).toFixed(1)}</div></div>
+      <div class="tot"><div class="k">S/AD noche</div><div class="v">${(t.sad_noche||0).toFixed(1)}</div></div>
+      <div class="tot"><div class="k">Trav. día</div><div class="v">${(t.trav_dia||0).toFixed(1)}</div></div>
+      <div class="tot"><div class="k">Trav. noche</div><div class="v">${(t.trav_noche||0).toFixed(1)}</div></div>
+    </div></div>`;
+  html+=`<div class="filtros">
+      <select id="fAnio" onchange="aplicarFiltros()"><option value="">Todos los años</option>${anios.map(a=>`<option>${a}</option>`).join('')}</select>
+      <input id="fAero" placeholder="Aeródromo (MOR)" oninput="aplicarFiltros()">
+    </div>`;
+  html+=`<button class="btn primary" style="margin-bottom:12px" onclick="openVuelo(null)">+ Cargar vuelo manual</button>`;
+  if(res.borradores&&res.borradores.length){
+    window._borr=res.borradores;
+    html+=`<div style="color:var(--acento);font-size:13px;font-weight:600;margin:4px 0 8px">Sin completar (${res.borradores.length})</div>`;
+    html+=res.borradores.map((b,i)=>`<div class="row" onclick="completarBorrIdx(${i})">
+      <div class="main"><div class="r1">Borrador · ${esc(b.hora_salida_z)||'--'}–${esc(b.hora_llegada_z)||'--'} Z</div>
+      <div class="r2">${fdate(b)} · tocá para completar</div></div>
+      <div class="dur"><div class="d">${(b.duracion||0).toFixed(1)}</div><div class="a">dur</div></div></div>`).join('');
+  }
+  html+=`<div id="libroList" class="listwrap"></div>`;
+  $('libroBody').innerHTML=html;
+  pintarLista(res.vuelos);
+}
+function fdate(v){return pad(v.dia)+'/'+pad(v.mes)+'/'+v.anio}
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function abrirVueloIdx(i){openVuelo(window._shown[i])}
+function completarBorrIdx(i){completarBorrador(window._borr[i])}
+function pintarLista(vuelos){
+  window._shown=vuelos;
+  const el=$('libroList');
+  if(!vuelos.length){el.innerHTML='<div class="vacio">No hay vuelos con ese filtro.</div>';return;}
+  el.innerHTML=vuelos.map((v,i)=>`<div class="row" onclick="abrirVueloIdx(${i})">
+      <div class="main"><div class="r1">${esc(v.desde)||'?'} → ${esc(v.hacia)||'?'} <span class="pill">${esc(v.finalidad)}</span></div>
+      <div class="r2">${fdate(v)} · ${esc(v.matricula)} · sale ${esc(v.hora_salida_z)||'--'}Z</div></div>
+      <div class="dur"><div class="d">${(v.duracion||0).toFixed(1)}</div><div class="a">acum ${(v.acumulado?v.acumulado.total:0).toFixed(1)}</div></div></div>`).join('');
+}
+function aplicarFiltros(){
+  const res=window._libro;if(!res)return;
+  const anio=$('fAnio').value, aero=($('fAero').value||'').trim().toUpperCase();
+  let vs=res.vuelos.slice();
+  if(anio) vs=vs.filter(v=>String(v.anio)===anio);
+  if(aero) vs=vs.filter(v=>(v.desde||'').toUpperCase().includes(aero)||(v.hacia||'').toUpperCase().includes(aero));
+  pintarLista(vs);
+}
+function completarBorrador(b){openVuelo({vuelo_id:b.vuelo_id,estado:'borrador',anio:b.anio,mes:b.mes,dia:b.dia,hora_salida_z:b.hora_salida_z,hora_llegada_z:b.hora_llegada_z,duracion:b.duracion,desde:b.desde,hacia:b.hacia})}
+
+/* ---- FORM VUELO ---- */
+function setV(id,val){$(id).value=(val===undefined||val===null)?'':val}
+function openVuelo(v){
+  v=v||{};
+  window._editVuelo=v;
+  editVueloId=v.vuelo_id||null;
+  $('vueloFormTit').textContent=editVueloId?'Editar vuelo':'Cargar vuelo';
+  $('btnBorrarVuelo').classList.toggle('hidden',!editVueloId);
+  const hoy=new Date();
+  const anio=v.anio||hoy.getFullYear(), mes=v.mes||(hoy.getMonth()+1), dia=v.dia||hoy.getDate();
+  $('v_fecha').value=`${anio}-${pad(mes)}-${pad(dia)}`;
+  setV('v_hsal',v.hora_salida_z);setV('v_hlleg',v.hora_llegada_z);
+  setV('v_desde',v.desde);setV('v_hacia',v.hacia);setV('v_finalidad',v.finalidad);
+  setV('v_aeronave',v.aeronave_id);setV('v_duracion',v.duracion?Number(v.duracion).toFixed(1):'');
+  setV('v_aterrizajes',v.aterrizajes);
+  ['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'].forEach(k=>{const val=v[k];$('c_'+k).value=(val&&NUM(val))?Number(val).toFixed(1):''});
+  ['instruccion','capota','multimotor','reactor','turbohelice','aeroaplicador','simu'].forEach(k=>setV('v_'+k,(v[k]&&NUM(v[k]))?Number(v[k]).toFixed(1):''));
+  $('v_foliado').checked=v.foliado==='si';
+  setV('v_comentario',v.comentario);
+  // deducir selectores desde casillas existentes o sugerir
+  const casillas=['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'];
+  const conValor=casillas.find(k=>NUM(v[k])>0);
+  if(conValor){const p=conValor.split('_');seg={cat:p[0],mom:p[1],rol:p[2]};}
+  else{seg={cat:(v.desde&&v.hacia&&v.desde===v.hacia)?'sad':'trav',mom:'dia',rol:'pil'};}
+  pintarSeg();chkVolcado();
+  showScreen('scrVuelo');
+}
+function autofillAeronave(){
+  const a=aeronaves.find(x=>x.aeronave_id===$('v_aeronave').value);
+  if(!a)return;
+  if(!$('v_finalidad').value) {}
+  $('v_desde');// keep
+}
+function setSeg(k,val){seg[k]=val;pintarSeg();volcar()}
+function pintarSeg(){
+  [['segCat','cat'],['segMom','mom'],['segRol','rol']].forEach(([id,k])=>{
+    document.querySelectorAll('#'+id+' button').forEach(b=>b.classList.toggle('on',b.dataset.v===seg[k]));
+  });
+}
+function sugerirCategoria(){
+  const d=$('v_desde').value.trim(),h=$('v_hacia').value.trim();
+  if(d&&h){seg.cat=(d.toUpperCase()===h.toUpperCase())?'sad':'trav';pintarSeg();volcar();}
+}
+function volcar(){
+  const dur=NUM($('v_duracion').value);
+  ['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'].forEach(k=>$('c_'+k).value='');
+  if(dur>0){$('c_'+seg.cat+'_'+seg.mom+'_'+seg.rol).value=dur.toFixed(1);}
+  chkVolcado();
+}
+function chkVolcado(){
+  const dur=NUM($('v_duracion').value);
+  let sum=0;document.querySelectorAll('.cas').forEach(i=>sum+=NUM(i.value));
+  sum=Math.round(sum*10)/10;
+  const w=$('volcadoWarn');
+  if(dur>0&&Math.abs(sum-dur)>0.05){w.textContent=`Las horas por categoría suman ${sum.toFixed(1)} y la duración es ${dur.toFixed(1)}. Podés guardar igual.`;w.classList.remove('hidden');}
+  else w.classList.add('hidden');
+}
+function cancelVuelo(){navTo(editVueloId?'scrLibro':'scrCrono')}
+async function saveVuelo(){
+  const f=($('v_fecha').value||'').split('-');
+  const a=aeronaves.find(x=>x.aeronave_id===$('v_aeronave').value);
+  const vObj={
+    estado:'confirmado',
+    anio:NUM(f[0]),mes:NUM(f[1]),dia:NUM(f[2]),
+    hora_salida_z:$('v_hsal').value.trim(),hora_llegada_z:$('v_hlleg').value.trim(),
+    desde:$('v_desde').value.trim(),hacia:$('v_hacia').value.trim(),finalidad:$('v_finalidad').value.trim(),
+    aeronave_id:$('v_aeronave').value,
+    marca:a?a.marca_libro:((window._editVuelo&&window._editVuelo.marca)||''),matricula:a?a.matricula:((window._editVuelo&&window._editVuelo.matricula)||''),potencia:a?a.potencia:((window._editVuelo&&window._editVuelo.potencia)||''),clase:a?a.clase:((window._editVuelo&&window._editVuelo.clase)||''),
+    aterrizajes:NUM($('v_aterrizajes').value),duracion:NUM($('v_duracion').value),
+    foliado:$('v_foliado').checked?'si':'no',comentario:$('v_comentario').value.trim()
+  };
+  ['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'].forEach(k=>vObj[k]=NUM($('c_'+k).value));
+  ['instruccion','capota','multimotor','reactor','turbohelice','aeroaplicador','simu'].forEach(k=>vObj[k]=NUM($('v_'+k).value));
+  if(editVueloId) vObj.vuelo_id=editVueloId;
+  if(!vObj.desde||!vObj.hacia){toast('Completá Desde y Hacia');return;}
+  const sum=Math.round((vObj.sad_dia_pil+vObj.sad_dia_cop+vObj.sad_noche_pil+vObj.sad_noche_cop+vObj.trav_dia_pil+vObj.trav_dia_cop+vObj.trav_noche_pil+vObj.trav_noche_cop)*10)/10;
+  if(vObj.duracion>0&&Math.abs(sum-vObj.duracion)>0.05){ if(!confirm(`Las horas por categoría (${sum.toFixed(1)}) no coinciden con la duración (${vObj.duracion.toFixed(1)}). ¿Guardar igual?`)) return; }
+  toast('Guardando…');
+  const res=await api('avolar-vuelo-guardar',{vuelo:vObj});
+  if(res&&res.ok){toast('Vuelo guardado');navTo('scrLibro');}
+  else toast('No se pudo guardar');
+}
+async function deleteVuelo(){
+  if(!editVueloId)return; if(!confirm('¿Borrar este vuelo del libro?'))return;
+  const res=await api('avolar-vuelo-borrar',{vuelo_id:editVueloId});
+  if(res&&res.ok){toast('Vuelo borrado');navTo('scrLibro');} else toast('No se pudo borrar');
 }
 
-function nuevoVuelo(){ vuelo=null; vista('vistaIdle'); }
-
-/* --- arranque --- */
-if(token){ entrar(); } else { show('login'); }
+/* arranque */
+if(token){entrar();}else{$('login').classList.remove('hidden');}
 </script>
 </body>
 </html>
