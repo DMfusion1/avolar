@@ -19,7 +19,7 @@
     --ok:#2e9e5b; --stop:#d0453b; --texto:#eef4fb; --tenue:#9fb4d0; --card:#132a4d; --linea:rgba(255,255,255,.08);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
+  html,body{height:100%; overflow-x:hidden; width:100%; max-width:100%}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:radial-gradient(120% 100% at 50% 0%,#12315c 0%,#0b1f3a 60%,#081627 100%);
@@ -147,7 +147,7 @@
   .formbtns .btn{flex:1}
 
   /* Bottom nav */
-  #bottomNav{position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; display:flex; background:rgba(9,24,44,.96); backdrop-filter:blur(10px); border-top:1px solid var(--linea); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); z-index:40}
+  #bottomNav{position:fixed; bottom:0; left:0; right:0; width:100%; max-width:480px; margin:0 auto; display:flex; background:rgba(9,24,44,.96); backdrop-filter:blur(10px); border-top:1px solid var(--linea); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); z-index:40}
   #bottomNav button{flex:1; background:none; border:none; color:var(--tenue); font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0}
   #bottomNav button .ic{font-size:20px}
   #bottomNav button.on{color:var(--acento)}
