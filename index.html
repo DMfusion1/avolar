@@ -269,6 +269,7 @@
             <div><label>Vigilancia (10b)</label><input id="af_vigilancia_fpl" placeholder="C"></div>
             <div><label>Color y marcas</label><input id="af_color_marcas" placeholder="Blanco/azul"></div>
           </div>
+          <div class="field"><label>Operador</label><input id="af_operador" placeholder="Nombre del operador (casilla 18 OPR/)"></div>
         </details>
         <div class="chkrow"><input type="checkbox" id="af_activa" checked><label for="af_activa">Aeronave activa</label></div>
         <div class="formbtns">
@@ -500,7 +501,7 @@ async function loadAeronaves(){
   if(!aeronaves.length){b.innerHTML='<div class="vacio">Todavía no cargaste aeronaves.<br>Tocá "+ Nueva" para agregar la primera.</div>';return;}
   b.innerHTML=aeronaves.map(a=>`<div class="row" onclick='openAeroForm(${JSON.stringify(a.aeronave_id)})'>
       <div class="main"><div class="r1">${esc(a.matricula)||'(sin matrícula)'} ${a.activa==='no'?'<span class="pill">inactiva</span>':''}</div>
-      <div class="r2">${esc([a.marca_modelo,a.clase,a.potencia].filter(Boolean).join(' · '))||'—'}</div></div>
+      <div class="r2">${esc([a.marca_modelo,a.clase,a.potencia,a.operador?('Op: '+a.operador):''].filter(Boolean).join(' · '))||'—'}</div></div>
       <div class="dur"><div class="a">OACI</div><div class="r1">${esc(a.tipo_oaci)||'—'}</div></div></div>`).join('');
 }
 function openAeroForm(id){
@@ -516,6 +517,7 @@ function openAeroForm(id){
   $('af_equipo_fpl').value=a?a.equipo_fpl||'':'';
   $('af_vigilancia_fpl').value=a?a.vigilancia_fpl||'':'';
   $('af_color_marcas').value=a?a.color_marcas||'':'';
+  $('af_operador').value=a?a.operador||'':'';
   $('af_activa').checked=a?a.activa!=='no':true;
   $('scrAeroForm').dataset.editId=a?a.aeronave_id:'';
   showScreen('scrAeroForm');
@@ -528,7 +530,7 @@ async function saveAero(){
     marca_modelo:$('af_marca_modelo').value.trim(),marca_libro:$('af_marca_libro').value.trim(),
     tipo_oaci:$('af_tipo_oaci').value.trim(),clase:$('af_clase').value.trim(),potencia:$('af_potencia').value.trim(),
     estela:$('af_estela').value,equipo_fpl:$('af_equipo_fpl').value.trim(),vigilancia_fpl:$('af_vigilancia_fpl').value.trim(),
-    color_marcas:$('af_color_marcas').value.trim(),activa:$('af_activa').checked?'si':'no'};
+    color_marcas:$('af_color_marcas').value.trim(),operador:$('af_operador').value.trim(),activa:$('af_activa').checked?'si':'no'};
   if(id) data.aeronave_id=id;
   toast('Guardando…');
   const res=await api('avolar-aeronaves',data);
