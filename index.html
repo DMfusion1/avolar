@@ -137,6 +137,9 @@
   .dircard .dname{font-weight:700; font-size:15px; line-height:1.25}
   .dircard .dcodes{color:var(--cielo); font-size:12.5px; font-weight:700; margin-top:4px; letter-spacing:.3px}
   .dircard .dloc{color:var(--tenue); font-size:12.5px; margin-top:2px}
+  .dircard .dmeta{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px}
+  .dircard .dchip{font-size:10.5px; color:var(--tenue); background:rgba(255,255,255,.06); border:1px solid var(--linea); border-radius:6px; padding:2px 7px}
+  .dircard .dchip.intl{color:var(--acento); background:rgba(245,166,35,.14)}
   .dircard .dcontacts{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
   .dircard a.dlink{color:var(--acento); text-decoration:none; background:rgba(245,166,35,.12); border:1px solid var(--linea); border-radius:9px; padding:7px 11px; display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600}
   .dircard a.dlink .dl-k{color:var(--tenue); font-weight:600; font-size:11px}
@@ -360,7 +363,7 @@
       <div class="scrhead"><h2>Directorio</h2><button class="linkbtn" onclick="dirLimpiar()">Limpiar</button></div>
       <div class="listwrap">
         <div class="field"><input id="dirQ" placeholder="Nombre, localidad o código (EZE, SAEZ, Rosario…)" autocomplete="off" oninput="dirSearch()"></div>
-        <div class="hint">Mails y teléfonos ARO/AIS: EANA. Teléfono del jefe de aeródromo cuando está publicado. Los aeródromos chicos suelen no tener oficina de contacto.</div>
+        <div class="hint">Datos de aeródromos: ANAC (Transporte). Mails y teléfonos ARO/AIS: EANA. Teléfono del jefe de aeródromo cuando está publicado. Los aeródromos chicos suelen no tener oficina de contacto.</div>
         <div id="dirRes"></div>
       </div>
     </section>
@@ -776,9 +779,15 @@ function dirSearch(){
   res.sort((x,y)=>x.rank-y.rank || (x.a.n||'').localeCompare(y.a.n||''));
   const top=res.slice(0,30);
   if(!top.length){ box.innerHTML='<div class="vacio">Sin resultados</div>'; return; }
+  const CTRL={CONTROL:'Controlado',NOCONTROL:'No controlado',AERADIO:'AERADIO'};
   box.innerHTML=top.map(({a})=>{
     const codes=`ANAC: ${esc(a.anac||'—')} · IATA: ${esc(a.iata||'—')} · OACI: ${esc(a.oaci||'—')}`;
     const loc=[a.c,a.prov].filter(Boolean).map(esc).join(' · ');
+    const chips=[];
+    if(a.tipo) chips.push(`<span class="dchip">${esc(a.tipo)}</span>`);
+    if(a.ctrl) chips.push(`<span class="dchip">${esc(CTRL[a.ctrl]||a.ctrl)}</span>`);
+    if(a.traf==='Internacional') chips.push(`<span class="dchip intl">Internacional</span>`);
+    const meta=chips.length?`<div class="dmeta">${chips.join('')}</div>`:'';
     const links=[];
     if(a.mail) links.push(`<a class="dlink" href="mailto:${esc(a.mail)}"><span class="dl-k">✉️ ARO/AIS</span> ${esc(a.mail)}</a>`);
     if(a.tel)  links.push(`<a class="dlink" href="${telHref(a.tel)}"><span class="dl-k">☎️ ARO/AIS</span> ${esc(a.tel)}</a>`);
@@ -788,6 +797,7 @@ function dirSearch(){
       <div class="dname">${esc(a.n)}</div>
       <div class="dcodes">${codes}</div>
       ${loc?`<div class="dloc">${loc}</div>`:''}
+      ${meta}
       ${contacts}
     </div>`;
   }).join('');
