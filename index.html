@@ -154,6 +154,15 @@
 
   .toast{position:fixed; left:50%; bottom:92px; transform:translateX(-50%); background:#1c395f; border:1px solid rgba(255,255,255,.14); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; transition:opacity .25s; pointer-events:none; z-index:60; max-width:90%}
   .toast.show{opacity:1}
+  #printArea{display:none}
+  @media print{
+    .wrap,#bottomNav,#toast{display:none!important}
+    #printArea{display:block!important}
+    #printArea .ph{margin-bottom:10px;color:#000;font-size:15px}
+    #printArea *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    html,body{overflow:visible!important;height:auto;background:#fff}
+    @page{size:A4 landscape;margin:8mm}
+  }
 </style>
 </head>
 <body>
@@ -348,6 +357,7 @@
 </div>
 
 <div id="toast" class="toast"></div>
+<div id="printArea"></div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
@@ -525,6 +535,7 @@ function renderLibro(res){
       <div class="tot"><div class="k">Trav. día</div><div class="v">${(t.trav_dia||0).toFixed(1)}</div></div>
       <div class="tot"><div class="k">Trav. noche</div><div class="v">${(t.trav_noche||0).toFixed(1)}</div></div>
     </div></div>`;
+  html+=`<div style="display:flex;gap:8px;margin-bottom:12px"><button class="btn ghost sm" style="flex:1" onclick="exportExcel()">⬇️ Excel</button><button class="btn ghost sm" style="flex:1" onclick="exportPDF()">🖨️ PDF</button></div>`;
   html+=`<div class="filtros">
       <select id="fAnio" onchange="aplicarFiltros()"><option value="">Todos los años</option>${anios.map(a=>`<option>${a}</option>`).join('')}</select>
       <input id="fAero" placeholder="Aeródromo (MOR)" oninput="aplicarFiltros()">
@@ -564,6 +575,51 @@ function aplicarFiltros(){
   pintarLista(vs);
 }
 function completarBorrador(b){openVuelo({vuelo_id:b.vuelo_id,estado:'borrador',anio:b.anio,mes:b.mes,dia:b.dia,hora_salida_z:b.hora_salida_z,hora_llegada_z:b.hora_llegada_z,duracion:b.duracion,desde:b.desde,hacia:b.hacia})}
+
+/* ---- EXPORTAR ---- */
+function d1(x){x=Number(x);return isFinite(x)&&x>0?x.toFixed(1):'-'}
+function libroTablaHTML(){
+  const L=window._libro; if(!L||!L.vuelos) return '';
+  const vs=L.vuelos.slice().reverse(); const t=L.totales||{};
+  const thS='border:1px solid #556;padding:3px 4px;background:#dbe6f5;color:#0b1f3a;font-size:10px';
+  const tdS='border:1px solid #99a;padding:2px 4px;text-align:center;font-size:10px;color:#111';
+  let h='<table style="border-collapse:collapse;width:100%"><tr>';
+  ['Año','Día','Mes','H.Sal','Desde','Hacia','H.Lleg','Final.','Marca','Matríc.','Pot','Clase'].forEach(x=>h+=`<th rowspan="2" style="${thS}">${x}</th>`);
+  h+=`<th colspan="4" style="${thS}">Sobre AD</th><th colspan="4" style="${thS}">Travesía</th>`;
+  ['Aterr','Instr','Multi','React','Turbo','Aeroap','Capota','Simu'].forEach(x=>h+=`<th rowspan="2" style="${thS}">${x}</th>`);
+  h+=`<th colspan="5" style="${thS}">TOTALES (acumulado)</th><th rowspan="2" style="${thS}">Fol.</th><th rowspan="2" style="${thS}">Comentario</th></tr><tr>`;
+  ['Día Pil','Día Cop','Noc Pil','Noc Cop','Día Pil','Día Cop','Noc Pil','Noc Cop','S/AD Día','S/AD Noc','Trav Día','Trav Noc','Total'].forEach(x=>h+=`<th style="${thS}">${x}</th>`);
+  h+='</tr>';
+  for(const v of vs){
+    const a=v.acumulado||{};
+    const c=[v.anio,v.dia,v.mes,v.hora_salida_z,v.desde,v.hacia,v.hora_llegada_z,v.finalidad,v.marca,v.matricula,v.potencia,v.clase,
+      d1(v.sad_dia_pil),d1(v.sad_dia_cop),d1(v.sad_noche_pil),d1(v.sad_noche_cop),d1(v.trav_dia_pil),d1(v.trav_dia_cop),d1(v.trav_noche_pil),d1(v.trav_noche_cop),
+      (Number(v.aterrizajes)>0?v.aterrizajes:'-'),d1(v.instruccion),d1(v.multimotor),d1(v.reactor),d1(v.turbohelice),d1(v.aeroaplicador),d1(v.capota),d1(v.simu),
+      d1(a.sad_dia),d1(a.sad_noche),d1(a.trav_dia),d1(a.trav_noche),d1(a.total),(v.foliado==='si'?'Sí':'-'),v.comentario||''];
+    h+='<tr>'+c.map((x,i)=>`<td style="${tdS}${i===c.length-1?';text-align:left':''}">${esc(x)}</td>`).join('')+'</tr>';
+  }
+  h+=`<tr style="font-weight:700"><td colspan="20" style="${tdS};text-align:right;background:#eef4fb">TOTALES →</td>`;
+  h+=`<td style="${tdS};background:#eef4fb">${t.aterrizajes||0}</td><td colspan="7" style="${tdS};background:#eef4fb"></td>`;
+  h+=`<td style="${tdS};background:#eef4fb">${d1(t.sad_dia)}</td><td style="${tdS};background:#eef4fb">${d1(t.sad_noche)}</td><td style="${tdS};background:#eef4fb">${d1(t.trav_dia)}</td><td style="${tdS};background:#eef4fb">${d1(t.trav_noche)}</td><td style="${tdS};background:#eef4fb;font-weight:700">${d1(t.total_general)}</td>`;
+  h+=`<td colspan="2" style="${tdS};background:#eef4fb"></td></tr></table>`;
+  return h;
+}
+function descargar(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u);},200);}
+function exportExcel(){
+  if(!window._libro){toast('Abrí el Libro primero');return;}
+  const nom=esc((usuario&&usuario.nombre)||'');
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><h3>Libro de vuelo — ${nom}</h3>${libroTablaHTML()}</body></html>`;
+  descargar(new Blob(['﻿'+html],{type:'application/vnd.ms-excel'}),'Libro Volemos Hoy.xls');
+  toast('Excel descargado');
+}
+function exportPDF(){
+  if(!window._libro){toast('Abrí el Libro primero');return;}
+  const hoy=new Date();const f=`${pad(hoy.getDate())}/${pad(hoy.getMonth()+1)}/${hoy.getFullYear()}`;
+  const nom=esc((usuario&&usuario.nombre)||'');
+  const lic=(usuario&&usuario.licencia_numero)?` · Lic. ${esc(usuario.licencia_numero)}`:'';
+  $('printArea').innerHTML=`<div class="ph"><b>Libro de vuelo</b> — ${nom}${lic}<br><span style="font-size:11px">Emitido ${f} · volemoshoy.com</span></div>`+libroTablaHTML();
+  window.print();
+}
 
 /* ---- FORM VUELO ---- */
 function setV(id,val){$(id).value=(val===undefined||val===null)?'':val}
