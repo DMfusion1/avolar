@@ -134,6 +134,13 @@
   .ac-item:active{background:#173156}
   .ac-item .code{font-weight:700; color:var(--cielo)}
   .ac-item .sub{color:var(--tenue); font-size:11.5px}
+  .dircard .dname{font-weight:700; font-size:15px; line-height:1.25}
+  .dircard .dcodes{color:var(--cielo); font-size:12.5px; font-weight:700; margin-top:4px; letter-spacing:.3px}
+  .dircard .dloc{color:var(--tenue); font-size:12.5px; margin-top:2px}
+  .dircard .dcontacts{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  .dircard a.dlink{color:var(--acento); text-decoration:none; background:rgba(245,166,35,.12); border:1px solid var(--linea); border-radius:9px; padding:7px 11px; display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600}
+  .dircard a.dlink .dl-k{color:var(--tenue); font-weight:600; font-size:11px}
+  .dircard.nocontact{opacity:.85}
   details.adv{margin:6px 0 13px; border:1px solid var(--linea); border-radius:10px; padding:0 12px}
   details.adv summary{cursor:pointer; padding:11px 0; color:var(--cielo); font-size:14px; font-weight:600; list-style:none}
   details.adv summary::-webkit-details-marker{display:none}
@@ -348,10 +355,21 @@
       </div>
     </section>
 
+    <!-- DIRECTORIO -->
+    <section id="scrDir" class="screen hidden">
+      <div class="scrhead"><h2>Directorio</h2><button class="linkbtn" onclick="dirLimpiar()">Limpiar</button></div>
+      <div class="listwrap">
+        <div class="field"><input id="dirQ" placeholder="Nombre, localidad o código (EZE, SAEZ, Rosario…)" autocomplete="off" oninput="dirSearch()"></div>
+        <div class="hint">Mails y teléfonos ARO/AIS: EANA. Teléfono del jefe de aeródromo cuando está publicado. Los aeródromos chicos suelen no tener oficina de contacto.</div>
+        <div id="dirRes"></div>
+      </div>
+    </section>
+
     <nav id="bottomNav">
       <button data-scr="scrCrono" onclick="navTo('scrCrono')"><span class="ic">⏱️</span>Cronómetro</button>
       <button data-scr="scrLibro" onclick="navTo('scrLibro')"><span class="ic">📖</span>Libro</button>
       <button data-scr="scrAero" onclick="navTo('scrAero')"><span class="ic">🛩️</span>Aeronaves</button>
+      <button data-scr="scrDir" onclick="navTo('scrDir')"><span class="ic">📇</span>Directorio</button>
     </nav>
   </div>
 </div>
@@ -404,13 +422,14 @@ function logout(){
 
 /* navegacion */
 function showScreen(id){
-  ['scrCrono','scrLibro','scrAero','scrAeroForm','scrVuelo'].forEach(s=>$(s).classList.toggle('hidden',s!==id));
+  ['scrCrono','scrLibro','scrAero','scrAeroForm','scrVuelo','scrDir'].forEach(s=>$(s).classList.toggle('hidden',s!==id));
 }
 function navTo(id){
   showScreen(id);
   document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('on',b.dataset.scr===id));
   if(id==='scrLibro') loadLibro();
   if(id==='scrAero') loadAeronaves();
+  if(id==='scrDir') cargarDirectorio();
 }
 async function entrar(){
   $('login').classList.add('hidden');$('appShell').classList.remove('hidden');$('btnLogout').classList.remove('hidden');
@@ -731,6 +750,47 @@ async function deleteVuelo(){
   if(!editVueloId)return; if(!confirm('¿Borrar este vuelo del libro?'))return;
   const res=await api('avolar-vuelo-borrar',{vuelo_id:editVueloId});
   if(res&&res.ok){toast('Vuelo borrado');navTo('scrLibro');} else toast('No se pudo borrar');
+}
+
+/* ---- DIRECTORIO ---- */
+async function cargarDirectorio(){
+  if(window._dir)return;
+  try{ window._dir=await fetch('/directorio.json').then(r=>r.json()); }catch(e){ window._dir=[]; }
+}
+function telHref(p){ return 'tel:'+String(p).replace(/[^0-9+]/g,''); }
+function dirLimpiar(){ $('dirQ').value=''; $('dirRes').innerHTML=''; $('dirQ').focus(); }
+function dirSearch(){
+  const q=norm($('dirQ').value.trim());
+  const box=$('dirRes');
+  if(q.length<2||!window._dir||!window._dir.length){ box.innerHTML=''; return; }
+  const res=[];
+  for(const a of window._dir){
+    const anac=norm(a.anac), iata=norm(a.iata), oaci=norm(a.oaci), nn=norm(a.n), nc=norm(a.c), np=norm(a.prov);
+    let rank=-1;
+    if(anac===q||iata===q||oaci===q) rank=0;
+    else if((anac&&anac.startsWith(q))||(iata&&iata.startsWith(q))||(oaci&&oaci.startsWith(q))) rank=1;
+    else if(nc.startsWith(q)||nn.startsWith(q)) rank=2;
+    else if(nn.includes(q)||nc.includes(q)||np.includes(q)) rank=3;
+    if(rank>=0) res.push({a,rank});
+  }
+  res.sort((x,y)=>x.rank-y.rank || (x.a.n||'').localeCompare(y.a.n||''));
+  const top=res.slice(0,30);
+  if(!top.length){ box.innerHTML='<div class="vacio">Sin resultados</div>'; return; }
+  box.innerHTML=top.map(({a})=>{
+    const codes=`ANAC: ${esc(a.anac||'—')} · IATA: ${esc(a.iata||'—')} · OACI: ${esc(a.oaci||'—')}`;
+    const loc=[a.c,a.prov].filter(Boolean).map(esc).join(' · ');
+    const links=[];
+    if(a.mail) links.push(`<a class="dlink" href="mailto:${esc(a.mail)}"><span class="dl-k">✉️ ARO/AIS</span> ${esc(a.mail)}</a>`);
+    if(a.tel)  links.push(`<a class="dlink" href="${telHref(a.tel)}"><span class="dl-k">☎️ ARO/AIS</span> ${esc(a.tel)}</a>`);
+    if(a.telj) links.push(`<a class="dlink" href="${telHref(a.telj)}"><span class="dl-k">☎️ Jefe</span> ${esc(a.telj)}</a>`);
+    const contacts=links.length?`<div class="dcontacts">${links.join('')}</div>`:'';
+    return `<div class="card dircard${links.length?'':' nocontact'}">
+      <div class="dname">${esc(a.n)}</div>
+      <div class="dcodes">${codes}</div>
+      ${loc?`<div class="dloc">${loc}</div>`:''}
+      ${contacts}
+    </div>`;
+  }).join('');
 }
 
 /* arranque */
