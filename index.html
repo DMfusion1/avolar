@@ -336,7 +336,10 @@
           </div>
         </div>
         <button class="btn green" onclick="completarDesdeCrono()">Completar vuelo ahora</button>
-        <button class="linkbtn" onclick="masTarde()">Más tarde (queda como borrador)</button>
+        <div class="cronbtns">
+          <button class="btn ghost" onclick="masTarde()">Más tarde</button>
+          <button class="btn danger" onclick="descartarResumen()">Descartar</button>
+        </div>
       </div>
     </section>
 
@@ -614,6 +617,14 @@ function completarDesdeCrono(){
     hora_salida_z:lastStop.hora_salida_z,hora_llegada_z:lastStop.hora_llegada_z,duracion:lastStop.duracion});
 }
 function masTarde(){vuelo=null;vista('vistaIdle');navTo('scrCrono');toast('Quedó como borrador en el Libro')}
+async function descartarResumen(){
+  if(!lastStop||!lastStop.vuelo_id){vista('vistaIdle');return;}
+  if(!confirm('¿Descartar este vuelo? Se borra y no queda ni como borrador.'))return;
+  toast('Descartando…');
+  const res=await api('avolar-vuelo-borrar',{vuelo_id:lastStop.vuelo_id});
+  if(res&&res.ok){vuelo=null;lastStop=null;vista('vistaIdle');navTo('scrCrono');toast('Vuelo descartado');}
+  else toast('No se pudo descartar');
+}
 
 /* ---- AERONAVES ---- */
 async function cargarAeronaves(){
