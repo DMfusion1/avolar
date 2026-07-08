@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0b1f3a">
+<meta name="theme-color" content="#060c16">
 <title>Volemos Hoy</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -15,159 +15,245 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root{
-    --azul:#0b1f3a; --azul2:#12315c; --cielo:#3d7dca; --acento:#f5a623;
-    --ok:#2e9e5b; --stop:#d0453b; --texto:#eef4fb; --tenue:#9fb4d0; --card:#132a4d; --linea:rgba(255,255,255,.08);
+    --bg0:#060c16; --bg1:#0b1a30;
+    --card:#101f38; --card2:#13233f; --inset:#0c1b31;
+    --linea:rgba(255,255,255,.07); --linea2:rgba(255,255,255,.13);
+    --acento:#f5a623; --cielo:#5b9be0; --ok:#33b06a; --stop:#e0574c;
+    --texto:#eaf1fb; --tenue:#8ea3c2;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%; overflow-x:hidden; width:100%; max-width:100%}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    background:radial-gradient(120% 100% at 50% 0%,#12315c 0%,#0b1f3a 60%,#081627 100%);
+    font-family:var(--sans);
+    background:radial-gradient(130% 90% at 50% -10%,#12315c 0%,#0a1930 45%,#060c16 100%) fixed;
     color:var(--texto); min-height:100dvh; display:flex; flex-direction:column;
     padding:env(safe-area-inset-top) 0 0;
   }
-  .wrap{flex:1; width:100%; max-width:480px; margin:0 auto; padding:18px 18px 0; display:flex; flex-direction:column; position:relative}
-  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
-  .logo{display:flex; align-items:center; gap:9px; font-weight:700; font-size:19px; letter-spacing:.3px}
-  .logo .mark{width:28px;height:28px;border-radius:8px;object-fit:cover;display:block}
+  .wrap{flex:1; width:100%; max-width:480px; margin:0 auto; padding:16px 16px 0; display:flex; flex-direction:column; position:relative}
   .hidden{display:none !important}
+  .mono{font-family:var(--mono)}
   .spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;display:inline-block;vertical-align:middle}
   @keyframes sp{to{transform:rotate(360deg)}}
 
-  /* Login */
-  #login{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:20px; padding-bottom:40px}
-  .hero-icon{width:104px;height:104px;border-radius:24px;object-fit:cover;box-shadow:0 14px 38px rgba(0,0,0,.5);margin-bottom:6px}
-  #login .hero{font-size:26px; font-weight:700; line-height:1.25}
-  #login .sub{color:var(--tenue); font-size:15px; max-width:290px}
+  /* eyebrow + headers */
+  .eyebrow{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--tenue); font-weight:600}
+  .eyebrow.am{color:var(--acento)}
+  .scrhead{display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:16px; padding-top:4px}
+  .scrhead .htitle{font-size:24px; font-weight:800; letter-spacing:.2px; line-height:1.1; margin-top:3px}
+  .scrhead .count{font-family:var(--mono); color:var(--acento); font-size:12px; font-weight:700; letter-spacing:1px; white-space:nowrap}
+  .zchip{display:inline-flex; flex-direction:column; align-items:flex-end; border:1px solid var(--linea2); border-radius:13px; padding:6px 13px; background:rgba(255,255,255,.03)}
+  .zchip .zk{font-family:var(--mono); font-size:8.5px; letter-spacing:2px; color:var(--tenue)}
+  .zchip .zv{font-family:var(--mono); font-size:16px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums; margin-top:1px}
+  .zchip .zv .dot{color:var(--ok); font-size:11px; vertical-align:middle; margin-right:3px}
+
+  /* slim appbar */
+  #appbar{display:flex; align-items:center; justify-content:space-between; padding:2px 0 12px}
+  #appbar .brand{display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px; letter-spacing:.3px; color:var(--tenue)}
+  #appbar .brand img{width:22px;height:22px;border-radius:6px;object-fit:cover}
+  #appbar .out{background:none; border:1px solid var(--linea2); color:var(--tenue); font-size:12px; font-weight:600; border-radius:9px; padding:6px 12px; cursor:pointer}
+
+  /* ===== LOGIN ===== */
+  #login{flex:1; display:flex; flex-direction:column; min-height:100dvh}
+  #login .ltop{display:flex; justify-content:flex-end; padding:4px 0 0}
+  #login .lhero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px}
+  .heroring{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:4px}
+  .heroring::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(245,166,35,.45);animation:slowspin 26s linear infinite}
+  @keyframes slowspin{to{transform:rotate(360deg)}}
+  .heroring img{width:78px;height:78px;border-radius:20px;object-fit:cover;box-shadow:0 12px 34px rgba(0,0,0,.55)}
+  #login .word{font-size:34px; font-weight:800; letter-spacing:5px}
+  #login .word b{color:var(--acento)}
+  #login .tag{font-family:var(--mono); font-size:12px; letter-spacing:2px; color:var(--tenue); text-transform:uppercase}
+  .badge{display:inline-flex; align-items:center; gap:7px; border:1px solid rgba(245,166,35,.4); border-radius:22px; padding:8px 15px; font-family:var(--mono); font-size:10.5px; letter-spacing:1px; color:var(--texto); text-transform:uppercase; margin-top:4px}
+  .badge svg{width:14px;height:14px;stroke:var(--acento)}
+  #login .lcard{background:var(--card); border:1px solid var(--linea); border-radius:18px; padding:18px 16px; margin:14px 0 10px}
+  #login .lcard .ac{text-align:center; font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--tenue); text-transform:uppercase; padding-bottom:14px; border-bottom:1px solid var(--linea); margin-bottom:16px}
+  #login .gwrap{display:flex; justify-content:center; min-height:44px}
+  .lbar{height:5px; border-radius:5px; background:rgba(255,255,255,.08); overflow:hidden; margin-top:14px}
+  .lbar>i{display:block; height:100%; width:40%; background:var(--acento); border-radius:5px; animation:load 1.1s ease-in-out infinite}
+  @keyframes load{0%{margin-left:-42%}100%{margin-left:102%}}
+  #loginMsg{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--acento); text-transform:uppercase; text-align:center; margin-top:12px}
+  #login .disc{color:var(--tenue); font-size:11.5px; line-height:1.5; text-align:center; padding:8px 6px calc(20px + env(safe-area-inset-bottom))}
 
   /* App shell */
-  #appShell{flex:1; display:flex; flex-direction:column; padding-bottom:78px}
+  #appShell{flex:1; display:flex; flex-direction:column; padding-bottom:82px}
   .screen{flex:1; display:flex; flex-direction:column}
 
-  /* Reloj Zulu */
-  .zulu{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:14px 18px; text-align:center; margin-bottom:16px}
-  .zulu .lbl{color:var(--tenue); font-size:11px; text-transform:uppercase; letter-spacing:1.5px}
-  .zulu .val{font-size:38px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px}
-  .zulu .val small{font-size:17px; color:var(--cielo); font-weight:600}
+  /* ===== CRONOMETRO ===== */
+  .accion{flex:1; display:flex; flex-direction:column; align-items:center; gap:18px}
+  .statepill{display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(51,176,106,.5); color:var(--ok); font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; border-radius:22px; padding:7px 16px; font-weight:600}
+  .statepill .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .ring{position:relative; width:262px; height:262px; border-radius:50%;
+    background:conic-gradient(from -90deg, var(--acento) calc(var(--prog,.66)*1turn), rgba(255,255,255,.06) 0);
+    display:flex; align-items:center; justify-content:center; margin:4px 0}
+  .ring::before{content:""; position:absolute; inset:15px; border-radius:50%; background:radial-gradient(circle at 50% 40%,#0e1f3a,#0a1526); border:1px solid var(--linea)}
+  .ringc{position:relative; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px}
+  .ringc .rk{font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--tenue); text-transform:uppercase}
+  .cron{font-family:var(--mono); font-size:44px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums; letter-spacing:1px}
+  .decpill{font-family:var(--mono); font-size:12px; color:var(--texto); border:1px solid var(--linea2); border-radius:20px; padding:4px 12px}
+  .decpill b{color:var(--acento); font-size:15px}
+  .decpill span{color:var(--tenue); font-size:9.5px; letter-spacing:1px}
+  .offgrid{display:flex; gap:10px; width:100%; margin-top:2px}
+  .offcell{flex:1; background:var(--card); border:1px solid var(--linea); border-radius:14px; padding:11px 12px; text-align:center}
+  .offcell .k{font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--tenue); text-transform:uppercase}
+  .offcell .v{font-family:var(--mono); font-size:19px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px}
+  .offcell .v.z{color:var(--cielo)}
+  .cronbtns{display:flex; gap:10px; width:100%}
+  .cronbtns .btn{flex:1}
 
-  /* Boton grande */
-  .accion{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px}
-  .bigbtn{width:210px; height:210px; border-radius:50%; border:none; cursor:pointer; font-size:36px; font-weight:800; letter-spacing:2px; color:#fff; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 12px 34px rgba(0,0,0,.4); transition:transform .08s ease}
+  /* boton START grande (idle) */
+  .bigbtn{width:200px; height:200px; border-radius:50%; border:none; cursor:pointer; font-family:var(--mono); font-size:30px; font-weight:800; letter-spacing:3px; color:#fff; display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 12px 34px rgba(0,0,0,.4); transition:transform .08s ease}
   .bigbtn:active{transform:scale(.96)}
-  .bigbtn.start{background:radial-gradient(circle at 50% 35%,#37b86e,#1f8a4d); box-shadow:0 12px 40px rgba(46,158,91,.5)}
-  .bigbtn.stop{background:radial-gradient(circle at 50% 35%,#e0574c,#b7362c); box-shadow:0 12px 40px rgba(208,69,59,.5)}
-  .pulse::after{content:""; position:absolute; inset:-6px; border-radius:50%; border:3px solid rgba(224,87,76,.5); animation:pulse 1.8s ease-out infinite}
-  @keyframes pulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.18);opacity:0}}
-  .encurso{text-align:center}
-  .encurso .estado{color:var(--acento); font-weight:700; text-transform:uppercase; letter-spacing:2px; font-size:13px}
-  .cron{font-size:50px; font-weight:700; font-variant-numeric:tabular-nums; margin:6px 0}
-  .metas{color:var(--tenue); font-size:14px}
-  .metas b{color:var(--texto); font-variant-numeric:tabular-nums}
-  .decimas{margin-top:6px; font-size:15px; color:var(--cielo)}
-  .decimas b{color:var(--texto); font-size:22px}
+  .bigbtn.start{background:radial-gradient(circle at 50% 35%,#39c076,#1f8a4d); box-shadow:0 14px 42px rgba(51,176,106,.45)}
+  .bigbtn.start::after{content:""; position:absolute; inset:-10px; border-radius:50%; border:2px dashed rgba(51,176,106,.4)}
 
-  /* Resumen */
-  .resumen{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:18px; text-align:center; width:100%}
-  .resumen h3{font-size:16px; margin-bottom:12px; color:var(--acento)}
+  /* resumen */
+  .resumen{background:var(--card); border:1px solid var(--linea); border-radius:18px; padding:18px; text-align:center; width:100%}
+  .resumen h3{font-size:15px; margin-bottom:14px; color:var(--ok); font-family:var(--mono); letter-spacing:1px; text-transform:uppercase}
   .resumen .grid{display:flex; justify-content:space-around; gap:8px}
-  .resumen .cell .k{color:var(--tenue); font-size:11px; text-transform:uppercase; letter-spacing:1px}
-  .resumen .cell .v{font-size:23px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px}
+  .resumen .cell .k{color:var(--tenue); font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1px}
+  .resumen .cell .v{font-family:var(--mono); font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:4px}
   .resumen .dur .v{color:var(--acento)}
 
-  /* Titulos de pantalla */
-  .scrhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
-  .scrhead h2{font-size:20px; font-weight:700}
-  .scrhead .count{color:var(--tenue); font-size:13px}
-
   /* Botones */
-  .btn{border:none; border-radius:12px; padding:13px 18px; font-size:15px; font-weight:600; cursor:pointer; width:100%; transition:filter .1s}
+  .btn{border:none; border-radius:13px; padding:14px 18px; font-size:15px; font-weight:700; cursor:pointer; width:100%; transition:filter .1s; display:inline-flex; align-items:center; justify-content:center; gap:8px}
   .btn:active{filter:brightness(.9)}
   .btn.primary{background:linear-gradient(180deg,#4a90e2,#2f6fbf); color:#fff}
-  .btn.green{background:linear-gradient(180deg,#37b86e,#1f8a4d); color:#fff}
-  .btn.ghost{background:rgba(255,255,255,.07); border:1px solid var(--linea); color:var(--texto)}
-  .btn.danger{background:rgba(208,69,59,.15); border:1px solid rgba(208,69,59,.4); color:#f2a59e}
-  .btn.sm{padding:9px 12px; font-size:13px; width:auto}
-  .linkbtn{background:none; border:none; color:var(--tenue); font-size:14px; cursor:pointer; padding:8px 12px; text-decoration:underline}
-  .fab{background:var(--acento); color:#3a2600; font-weight:700}
+  .btn.green{background:linear-gradient(180deg,#39c076,#1f8a4d); color:#fff}
+  .btn.ghost{background:rgba(255,255,255,.05); border:1px solid var(--linea2); color:var(--texto)}
+  .btn.stopred{background:linear-gradient(180deg,#e5645a,#c23a30); color:#fff}
+  .btn.danger{background:rgba(224,87,76,.14); border:1px solid rgba(224,87,76,.45); color:#f2a59e}
+  .btn.sm{padding:9px 13px; font-size:13px; width:auto; border-radius:10px}
+  .linkbtn{background:none; border:none; color:var(--tenue); font-size:13.5px; cursor:pointer; padding:8px 12px; text-decoration:underline}
 
-  /* Cards / listas */
-  .card{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:14px 16px; margin-bottom:12px}
-  .totgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px 8px}
-  .tot .k{color:var(--tenue); font-size:10.5px; text-transform:uppercase; letter-spacing:.5px}
-  .tot .v{font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:1px}
-  .tot .v.big{color:var(--acento); font-size:24px}
+  /* Cards / totals */
+  .card{background:var(--card); border:1px solid var(--linea); border-radius:18px; padding:16px; margin-bottom:12px}
+  .totmain{background:linear-gradient(160deg,#14294a,#0f1e37)}
+  .totbig{display:flex; align-items:baseline; gap:8px; margin-top:6px}
+  .totbig span{font-family:var(--mono); font-size:44px; font-weight:800; color:var(--acento); font-variant-numeric:tabular-nums; line-height:1}
+  .totbig small{font-family:var(--mono); font-size:15px; color:var(--tenue); letter-spacing:1px}
+  .tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; margin-bottom:12px}
+  .tile{background:var(--card); border:1px solid var(--linea); border-radius:13px; padding:11px 10px}
+  .tile .tk{font-family:var(--mono); font-size:9px; letter-spacing:1px; color:var(--tenue); text-transform:uppercase}
+  .tile .tv{font-family:var(--mono); font-size:19px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:4px}
+  .tile .tv i{font-style:normal; font-size:11px; color:var(--tenue); margin-left:2px}
 
   .listwrap{}
-  .row{background:var(--card); border:1px solid var(--linea); border-radius:14px; padding:12px 14px; margin-bottom:9px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .seclbl{font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--tenue); text-transform:uppercase; margin:14px 2px 8px; display:flex; justify-content:space-between; align-items:center}
+  .row{background:var(--card); border:1px solid var(--linea); border-radius:14px; padding:13px 15px; margin-bottom:9px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px}
   .row:active{background:#173156}
   .row .main{min-width:0}
-  .row .r1{font-weight:600; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .row .r2{color:var(--tenue); font-size:12.5px; margin-top:2px}
+  .row .r1{font-weight:700; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.3px}
+  .row .r2{color:var(--tenue); font-family:var(--mono); font-size:11.5px; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
   .row .dur{text-align:right; flex-shrink:0}
-  .row .dur .d{font-size:19px; font-weight:700; color:var(--cielo); font-variant-numeric:tabular-nums}
-  .row .dur .a{font-size:10.5px; color:var(--tenue)}
-  .pill{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:20px; background:rgba(245,166,35,.18); color:var(--acento); margin-left:6px; vertical-align:middle}
+  .row .dur .d{font-family:var(--mono); font-size:20px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums}
+  .row .dur .d small{font-size:11px; color:var(--tenue)}
+  .row .dur .a{font-family:var(--mono); font-size:10px; color:var(--tenue); margin-top:2px}
+  .pill{display:inline-block; font-family:var(--mono); font-size:9.5px; padding:2px 7px; border-radius:20px; border:1px solid rgba(91,155,224,.5); color:var(--cielo); margin-left:6px; vertical-align:middle; letter-spacing:.5px}
+  .draftcard{border-color:rgba(224,87,76,.4)}
+  .draftcard .row{background:var(--inset); border-color:var(--linea)}
   .vacio{text-align:center; color:var(--tenue); font-size:14px; padding:40px 20px}
 
-  /* Filtros */
-  .filtros{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap}
-  .filtros select,.filtros input{flex:1; min-width:90px}
+  /* filtros */
+  .filtros{display:flex; gap:9px; margin-bottom:12px}
+  .filtros>div{flex:1; background:var(--card); border:1px solid var(--linea); border-radius:12px; padding:8px 12px; display:flex; align-items:center; gap:8px}
+  .filtros .fl{font-family:var(--mono); font-size:9px; letter-spacing:1px; color:var(--tenue); text-transform:uppercase}
+  .filtros select,.filtros input{flex:1; background:none; border:none; padding:2px 0; color:var(--acento); font-family:var(--mono); font-weight:700; font-size:14px; min-width:0}
+  .filtros select{appearance:none}
+
+  /* FAB */
+  .fab-add{position:fixed; z-index:45; right:calc(50vw - 240px + 18px); bottom:calc(94px + env(safe-area-inset-bottom)); width:58px; height:58px; border-radius:50%; border:none; background:var(--acento); color:#3a2600; font-size:30px; font-weight:700; cursor:pointer; box-shadow:0 10px 26px rgba(245,166,35,.45); display:flex; align-items:center; justify-content:center}
+  @media(max-width:480px){.fab-add{right:18px}}
+
+  /* aeronaves */
+  .acard{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:15px; margin-bottom:11px; cursor:pointer}
+  .acard:active{background:#152a4b}
+  .acard.inact{opacity:.72}
+  .acard .atop{display:flex; align-items:flex-start; justify-content:space-between; gap:8px}
+  .acard .amat{font-size:19px; font-weight:800; letter-spacing:.4px}
+  .acard .amat span{color:var(--cielo); font-size:13px; font-weight:600; margin-left:6px}
+  .acard .asub{font-family:var(--mono); font-size:10.5px; letter-spacing:.5px; color:var(--tenue); text-transform:uppercase; margin-top:4px}
+  .statechip{font-family:var(--mono); font-size:9.5px; letter-spacing:1px; border:1px solid var(--linea2); border-radius:20px; padding:3px 10px; color:var(--tenue); white-space:nowrap}
+  .statechip.on{color:var(--ok); border-color:rgba(51,176,106,.5)}
+  .aspecs{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px}
+  .aspecs .sp{background:var(--inset); border:1px solid var(--linea); border-radius:11px; padding:9px 10px}
+  .aspecs .sp .k{font-family:var(--mono); font-size:8.5px; letter-spacing:1px; color:var(--tenue); text-transform:uppercase}
+  .aspecs .sp .v{font-family:var(--mono); font-size:14px; font-weight:700; margin-top:3px}
+  .aspecs .sp .v.am{color:var(--acento)}
+  .afpl{display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:11px; border-top:1px solid var(--linea); font-family:var(--mono); font-size:11px; letter-spacing:.5px; color:var(--tenue); text-transform:uppercase}
+  .afpl b{color:var(--cielo); font-weight:700}
 
   /* Forms */
   .field{margin-bottom:13px}
   .field.row2{display:flex; gap:10px}
   .field.row2>div{flex:1; min-width:0}
   .casillas>.field{min-width:0}
-  label{display:block; color:var(--tenue); font-size:12.5px; margin-bottom:5px; font-weight:600}
-  input,select,textarea{width:100%; min-width:0; max-width:100%; box-sizing:border-box; background:#0e2545; border:1px solid var(--linea); border-radius:10px; padding:11px 12px; color:var(--texto); font-size:15px; font-family:inherit}
-  input:focus,select,textarea:focus{outline:none; border-color:var(--cielo)}
+  label{display:block; color:var(--tenue); font-family:var(--mono); font-size:10.5px; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; font-weight:600}
+  input,select,textarea{width:100%; min-width:0; max-width:100%; box-sizing:border-box; background:var(--inset); border:1px solid var(--linea2); border-radius:11px; padding:12px 13px; color:var(--texto); font-size:15px; font-family:inherit}
+  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--cielo)}
   textarea{resize:vertical; min-height:60px}
-  select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239fb4d0' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px}
-  .seg{display:flex; gap:0; border:1px solid var(--linea); border-radius:10px; overflow:hidden}
-  .seg button{flex:1; background:#0e2545; border:none; color:var(--tenue); padding:10px; font-size:14px; font-weight:600; cursor:pointer}
-  .seg button.on{background:var(--cielo); color:#04203f}
+  select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238ea3c2' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px}
+  .seg{display:flex; gap:0; border:1px solid var(--linea2); border-radius:11px; overflow:hidden}
+  .seg button{flex:1; background:var(--inset); border:none; color:var(--tenue); padding:11px; font-size:14px; font-weight:600; cursor:pointer}
+  .seg button.on{background:var(--cielo); color:#04203f; font-weight:700}
   .hint{color:var(--tenue); font-size:12px; margin-top:6px}
   .warn{color:#f2c14e; font-size:12.5px; margin-top:6px}
   .ac-wrap{position:relative}
-  .ac-list{position:absolute; top:100%; left:0; right:0; margin-top:4px; background:#0e2545; border:1px solid var(--cielo); border-radius:10px; max-height:230px; overflow-y:auto; z-index:30; box-shadow:0 10px 28px rgba(0,0,0,.5)}
+  .ac-list{position:absolute; top:100%; left:0; right:0; margin-top:4px; background:var(--inset); border:1px solid var(--cielo); border-radius:11px; max-height:230px; overflow-y:auto; z-index:30; box-shadow:0 10px 28px rgba(0,0,0,.5)}
   .ac-item{padding:9px 12px; cursor:pointer; font-size:13.5px; border-bottom:1px solid var(--linea); line-height:1.3}
   .ac-item:last-child{border-bottom:none}
   .ac-item:active{background:#173156}
-  .ac-item .code{font-weight:700; color:var(--cielo)}
+  .ac-item .code{font-family:var(--mono); font-weight:700; color:var(--cielo)}
   .ac-item .sub{color:var(--tenue); font-size:11.5px}
-  .dircard .dname{font-weight:700; font-size:15px; line-height:1.25}
-  .dircard .dcodes{color:var(--cielo); font-size:12.5px; font-weight:700; margin-top:4px; letter-spacing:.3px}
-  .dircard .dloc{color:var(--tenue); font-size:12.5px; margin-top:2px}
-  .dircard .dmeta{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px}
-  .dircard .dchip{font-size:10.5px; color:var(--tenue); background:rgba(255,255,255,.06); border:1px solid var(--linea); border-radius:6px; padding:2px 7px}
-  .dircard .dchip.intl{color:var(--acento); background:rgba(245,166,35,.14)}
-  .dircard .dcontacts{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
-  .dircard a.dlink{color:var(--acento); text-decoration:none; background:rgba(245,166,35,.12); border:1px solid var(--linea); border-radius:9px; padding:7px 11px; display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600}
-  .dircard a.dlink .dl-k{color:var(--tenue); font-weight:600; font-size:11px}
-  .dircard.nocontact{opacity:.85}
-  details.adv{margin:6px 0 13px; border:1px solid var(--linea); border-radius:10px; padding:0 12px}
-  details.adv summary{cursor:pointer; padding:11px 0; color:var(--cielo); font-size:14px; font-weight:600; list-style:none}
+  details.adv{margin:6px 0 13px; border:1px solid var(--linea2); border-radius:11px; padding:0 13px}
+  details.adv summary{cursor:pointer; padding:12px 0; color:var(--cielo); font-family:var(--mono); font-size:12px; letter-spacing:.5px; font-weight:600; list-style:none}
   details.adv summary::-webkit-details-marker{display:none}
-  .casillas{display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-bottom:12px}
+  .casillas{display:grid; grid-template-columns:1fr 1fr; gap:9px; padding-bottom:12px}
   .casillas .field{margin:0}
-  .casillas label{font-size:11px}
-  .chkrow{display:flex; align-items:center; gap:9px; margin-bottom:13px}
-  .chkrow input{width:20px;height:20px}
-  .chkrow label{margin:0; color:var(--texto); font-size:15px}
+  .chkrow{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+  .chkrow input{width:21px;height:21px;accent-color:var(--acento)}
+  .chkrow label{margin:0; color:var(--texto); font-family:var(--sans); font-size:15px; letter-spacing:0; text-transform:none}
   .formbtns{display:flex; gap:10px; margin-top:6px}
   .formbtns .btn{flex:1}
 
+  /* ===== DIRECTORIO ===== */
+  .search{display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--linea2); border-radius:13px; padding:12px 14px; margin-bottom:14px}
+  .search svg{width:18px;height:18px;stroke:var(--tenue);flex-shrink:0}
+  .search input{background:none; border:none; padding:0; font-size:15px}
+  .search input:focus{border:none}
+  .dircard{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:15px; margin-bottom:12px}
+  .dircard .dtop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+  .dircard .dname{font-weight:800; font-size:17px; line-height:1.2; letter-spacing:.3px}
+  .dircard .dbadges{text-align:right; flex-shrink:0}
+  .dircard .dtipo{font-family:var(--mono); font-size:9.5px; letter-spacing:1px; color:var(--tenue); text-transform:uppercase; margin-top:5px}
+  .dircard .intl{display:inline-block; font-family:var(--mono); font-size:9.5px; letter-spacing:1px; color:var(--acento); border:1px solid rgba(245,166,35,.45); border-radius:20px; padding:3px 10px; text-transform:uppercase}
+  .dircard .dloc{color:var(--tenue); font-size:13px; margin-top:3px}
+  .dircard .dctrl{font-family:var(--mono); font-size:9.5px; letter-spacing:1px; color:var(--tenue); text-transform:uppercase; margin-top:6px}
+  .codegrid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; border:1px solid var(--linea); border-radius:12px; overflow:hidden; margin-top:12px}
+  .codegrid .cc{padding:9px 6px; text-align:center; border-right:1px solid var(--linea)}
+  .codegrid .cc:last-child{border-right:none}
+  .codegrid .cck{font-family:var(--mono); font-size:8.5px; letter-spacing:1px; color:var(--tenue)}
+  .codegrid .ccv{font-family:var(--mono); font-size:14px; font-weight:700; color:var(--cielo); margin-top:3px}
+  .codegrid .ccv.na{color:var(--tenue); opacity:.6}
+  .dbtns{display:flex; gap:9px; margin-top:11px; flex-wrap:wrap}
+  .dbtns a{flex:1; min-width:130px; display:flex; flex-direction:column; text-decoration:none; border-radius:12px; padding:9px 13px; border:1px solid var(--linea2)}
+  .dbtns a.call{background:rgba(91,155,224,.16); border-color:rgba(91,155,224,.4)}
+  .dbtns a .bk{font-family:var(--mono); font-size:9px; letter-spacing:1px; color:var(--tenue); text-transform:uppercase; display:flex; align-items:center; gap:6px}
+  .dbtns a .bv{font-family:var(--mono); font-size:14px; font-weight:700; color:var(--texto); margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .dbtns a.call .bv{color:var(--cielo)}
+
   /* Bottom nav */
-  #bottomNav{position:fixed; bottom:0; left:0; right:0; width:100%; max-width:480px; margin:0 auto; display:flex; background:rgba(9,24,44,.96); backdrop-filter:blur(10px); border-top:1px solid var(--linea); padding:8px 8px calc(8px + env(safe-area-inset-bottom)); z-index:40}
-  #bottomNav button{flex:1; background:none; border:none; color:var(--tenue); font-size:11px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0}
-  #bottomNav button .ic{font-size:20px}
+  #bottomNav{position:fixed; bottom:0; left:0; right:0; width:100%; max-width:480px; margin:0 auto; display:flex; background:rgba(8,17,32,.94); backdrop-filter:blur(12px); border-top:1px solid var(--linea); padding:9px 6px calc(9px + env(safe-area-inset-bottom)); z-index:40}
+  #bottomNav button{flex:1; background:none; border:none; color:var(--tenue); font-family:var(--mono); font-size:9.5px; letter-spacing:.5px; text-transform:uppercase; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; padding:5px 0}
+  #bottomNav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
   #bottomNav button.on{color:var(--acento)}
 
-  .toast{position:fixed; left:50%; bottom:92px; transform:translateX(-50%); background:#1c395f; border:1px solid rgba(255,255,255,.14); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; transition:opacity .25s; pointer-events:none; z-index:60; max-width:90%}
+  .toast{position:fixed; left:50%; bottom:98px; transform:translateX(-50%); background:#1c395f; border:1px solid rgba(255,255,255,.14); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; transition:opacity .25s; pointer-events:none; z-index:60; max-width:90%; text-align:center}
   .toast.show{opacity:1}
   #printArea{display:none}
   @media print{
-    .wrap,#bottomNav,#toast{display:none!important}
+    .wrap,#bottomNav,#toast,.fab-add{display:none!important}
     #printArea{display:block!important}
     #printArea .ph{margin-bottom:10px;color:#000;font-size:15px}
     #printArea *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -178,47 +264,68 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div class="logo"><img class="mark" src="/icon-192.png" alt=""><span>Volemos Hoy</span></div>
-    <button id="btnLogout" class="linkbtn hidden" onclick="logout()">Salir</button>
-  </header>
 
   <!-- LOGIN -->
-  <section id="login">
-    <img class="hero-icon" src="/icon-192.png" alt="Volemos Hoy">
-    <div class="hero">Tu libro de vuelo,<br>siempre a mano</div>
-    <div class="sub">Cronometrá tus vuelos y llevá tu bitácora ANAC desde el celular.</div>
-    <div>
-      <div id="g_id_onload"
-           data-client_id="808288523555-c7m8vo96u2qig26uf74t2np39insvnav.apps.googleusercontent.com"
-           data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-      <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue"
-           data-text="continue_with" data-size="large" data-locale="es-419"></div>
+  <section id="login" class="hidden">
+    <div class="ltop"><div class="zchip"><span class="zk">HORA ZULU</span><span class="zv"><span class="js-zulu">--:--</span> Z</span></div></div>
+    <div class="lhero">
+      <div class="heroring"><img src="/icon-192.png" alt="Volemos Hoy"></div>
+      <div class="word">VOLEMOS <b>HOY</b></div>
+      <div class="tag">Tu libro de vuelo, en hora Zulu</div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg> Habilitado para licencias ANAC Argentina</div>
+      <div class="lcard">
+        <div class="ac">Acceso de tripulación</div>
+        <div class="gwrap">
+          <div id="g_id_onload"
+               data-client_id="808288523555-c7m8vo96u2qig26uf74t2np39insvnav.apps.googleusercontent.com"
+               data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+          <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue"
+               data-text="continue_with" data-size="large" data-locale="es-419"></div>
+        </div>
+        <div id="loginMsg"></div>
+      </div>
     </div>
-    <div id="loginMsg" class="sub"></div>
+    <div class="disc">Al ingresar, confirmás que aceptás registrar tus horas bajo declaración de veracidad según el Código Aeronáutico de la Nación Argentina.</div>
   </section>
 
   <!-- APP -->
   <div id="appShell" class="hidden">
+    <div id="appbar">
+      <div class="brand"><img src="/icon-192.png" alt=""><span>Volemos Hoy</span></div>
+      <button id="btnLogout" class="out" onclick="logout()">Salir</button>
+    </div>
 
     <!-- CRONOMETRO -->
     <section id="scrCrono" class="screen">
-      <div class="zulu"><div class="lbl">Hora Zulu (UTC)</div><div class="val"><span id="zuluClock">----</span> <small>Z</small></div></div>
-      <div id="vistaIdle" class="accion">
+      <div class="scrhead">
+        <div><div class="eyebrow am">Cronómetro de cabina</div><div class="htitle">Bloque &amp; Vuelo</div></div>
+        <div class="zchip"><span class="zk">HORA ZULU</span><span class="zv"><span class="dot">●</span><span class="js-zulu">--:--</span> Z</span></div>
+      </div>
+
+      <div id="vistaIdle" class="accion" style="justify-content:center">
         <button class="bigbtn start" onclick="doStart()">START</button>
-        <div style="color:var(--tenue);font-size:14px">Apretá al despegar</div>
+        <div class="eyebrow" style="margin-top:6px">Apretá al despegar</div>
       </div>
+
       <div id="vistaVuelo" class="accion hidden">
-        <div class="encurso">
-          <div class="estado">● Vuelo en curso</div>
+        <div class="statepill"><span class="dot"></span> En vuelo (airborne)</div>
+        <div class="ring"><div class="ringc">
+          <div class="rk">Tiempo transcurrido</div>
           <div class="cron" id="cron">00:00:00</div>
-          <div class="metas">Salida <b id="mSalida">----</b> Z</div>
-          <div class="decimas">Duración parcial <b id="mDecimas">0.0</b></div>
+          <div class="decpill"><b id="mDecimas">0.0</b> <span>DÉCIMAS</span></div>
+        </div></div>
+        <div class="offgrid">
+          <div class="offcell"><div class="k">Despegue (off)</div><div class="v z" id="mDespegue">--:--:--</div></div>
+          <div class="offcell"><div class="k">Hora actual Z</div><div class="v z"><span class="js-zulu">--:--</span></div></div>
         </div>
-        <button class="bigbtn stop pulse" onclick="doStop()">STOP</button>
-        <button class="linkbtn" onclick="doDescartar()">Descartar este vuelo</button>
+        <div class="cronbtns">
+          <button class="btn stopred" onclick="doStop()">■ Detener vuelo</button>
+          <button class="btn ghost" onclick="doDescartar()">Descartar</button>
+        </div>
+        <input type="hidden" id="mSalida">
       </div>
-      <div id="vistaResumen" class="accion hidden">
+
+      <div id="vistaResumen" class="accion hidden" style="justify-content:center">
         <div class="resumen">
           <h3>Vuelo terminado ✔</h3>
           <div class="grid">
@@ -234,19 +341,26 @@
 
     <!-- LIBRO -->
     <section id="scrLibro" class="screen hidden">
-      <div class="scrhead"><h2>Libro de vuelo</h2><span class="count" id="libroCount"></span></div>
+      <div class="scrhead">
+        <div><div class="eyebrow am">Sistema log-book RA</div><div class="htitle">Libro de vuelo</div></div>
+        <span class="count" id="libroCount"></span>
+      </div>
       <div id="libroBody"><div class="vacio"><span class="spin"></span></div></div>
+      <button class="fab-add" onclick="openVuelo(null)" title="Cargar vuelo manual">+</button>
     </section>
 
     <!-- AERONAVES -->
     <section id="scrAero" class="screen hidden">
-      <div class="scrhead"><h2>Mis aeronaves</h2><button class="btn primary sm" onclick="openAeroForm(null)">+ Nueva</button></div>
+      <div class="scrhead">
+        <div><div class="eyebrow am">Flota y datos FPL (ANAC)</div><div class="htitle">Mis aeronaves</div></div>
+        <button class="btn primary sm" onclick="openAeroForm(null)">+ Nueva</button>
+      </div>
       <div id="aeroBody" class="listwrap"><div class="vacio"><span class="spin"></span></div></div>
     </section>
 
     <!-- FORM AERONAVE -->
     <section id="scrAeroForm" class="screen hidden">
-      <div class="scrhead"><h2 id="aeroFormTit">Nueva aeronave</h2><button class="linkbtn" onclick="showScreen('scrAero')">Cancelar</button></div>
+      <div class="scrhead"><div><div class="eyebrow am">Ficha de aeronave</div><div class="htitle" id="aeroFormTit">Nueva aeronave</div></div><button class="linkbtn" onclick="showScreen('scrAero')">Cancelar</button></div>
       <div class="listwrap">
         <div class="field"><label>Matrícula *</label><input id="af_matricula" placeholder="LV-HAK"></div>
         <div class="field"><label>Marca y modelo</label><input id="af_marca_modelo" placeholder="Cessna 152"></div>
@@ -280,7 +394,7 @@
 
     <!-- FORM VUELO -->
     <section id="scrVuelo" class="screen hidden">
-      <div class="scrhead"><h2 id="vueloFormTit">Cargar vuelo</h2><button class="linkbtn" onclick="cancelVuelo()">Cancelar</button></div>
+      <div class="scrhead"><div><div class="eyebrow am">Carga de vuelo</div><div class="htitle" id="vueloFormTit">Cargar vuelo</div></div><button class="linkbtn" onclick="cancelVuelo()">Cancelar</button></div>
       <div class="listwrap">
         <div class="field"><label>Fecha</label><input type="date" id="v_fecha"></div>
         <div class="field row2">
@@ -362,19 +476,25 @@
 
     <!-- DIRECTORIO -->
     <section id="scrDir" class="screen hidden">
-      <div class="scrhead"><h2>Directorio</h2><button class="linkbtn" onclick="dirLimpiar()">Limpiar</button></div>
+      <div class="scrhead">
+        <div><div class="eyebrow am">Búsqueda ARO-AIS</div><div class="htitle">Directorio</div></div>
+        <div class="zchip"><span class="zk">HORA ZULU</span><span class="zv"><span class="js-zulu">--:--</span> Z</span></div>
+      </div>
       <div class="listwrap">
-        <div class="field"><input id="dirQ" placeholder="Nombre, localidad o código (EZE, SAEZ, Rosario…)" autocomplete="off" oninput="dirSearch()"></div>
-        <div class="hint">Datos de aeródromos: ANAC (Transporte). Mails y teléfonos ARO/AIS: EANA. Teléfono del jefe de aeródromo cuando está publicado. Los aeródromos chicos suelen no tener oficina de contacto.</div>
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="dirQ" placeholder="Nombre, localidad o código…" autocomplete="off" oninput="dirSearch()">
+        </div>
+        <div class="hint">Aeródromos: ANAC (Transporte). Mails y teléfonos ARO/AIS: EANA. Tel. del jefe de aeródromo cuando está publicado. Los aeródromos chicos suelen no tener oficina de contacto.</div>
         <div id="dirRes"></div>
       </div>
     </section>
 
     <nav id="bottomNav">
-      <button data-scr="scrCrono" onclick="navTo('scrCrono')"><span class="ic">⏱️</span>Cronómetro</button>
-      <button data-scr="scrLibro" onclick="navTo('scrLibro')"><span class="ic">📖</span>Libro</button>
-      <button data-scr="scrAero" onclick="navTo('scrAero')"><span class="ic">🛩️</span>Aeronaves</button>
-      <button data-scr="scrDir" onclick="navTo('scrDir')"><span class="ic">📇</span>Directorio</button>
+      <button data-scr="scrCrono" onclick="navTo('scrCrono')"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6M18 6l1.5-1.5"/></svg>Cronómetro</button>
+      <button data-scr="scrLibro" onclick="navTo('scrLibro')"><svg viewBox="0 0 24 24"><path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v14"/></svg>Libro</button>
+      <button data-scr="scrAero" onclick="navTo('scrAero')"><svg viewBox="0 0 24 24"><path d="M21 15l-8-4V4.5a1.5 1.5 0 0 0-3 0V11l-8 4v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-4.5L21 17z"/></svg>Aeronaves</button>
+      <button data-scr="scrDir" onclick="navTo('scrDir')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.7-1.5 4.3-1.5 5 0M15 9h3M15 13h3"/></svg>Directorio</button>
     </nav>
   </div>
 </div>
@@ -405,13 +525,13 @@ async function api(path, body){
   return r.json();
 }
 
-/* reloj */
-function zulu(){const d=new Date();$('zuluClock').textContent=pad(d.getUTCHours())+pad(d.getUTCMinutes())}
+/* reloj Zulu (HH:MM:SS en todos los .js-zulu) */
+function zulu(){const d=new Date();const t=pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds());document.querySelectorAll('.js-zulu').forEach(e=>e.textContent=t)}
 setInterval(zulu,1000); zulu();
 
 /* login */
 async function handleCredentialResponse(resp){
-  $('loginMsg').innerHTML='<span class="spin"></span>';
+  $('loginMsg').innerHTML='<div class="lbar"><i></i></div><div style="margin-top:8px">Estableciendo enlace seguro ANAC…</div>';
   try{
     const res=await fetch(API+'/avolar-login-google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:resp.credential})}).then(r=>r.json());
     if(res.ok){token=res.token;usuario=res.usuario;localStorage.setItem('av_token',token);localStorage.setItem('av_usuario',JSON.stringify(usuario));$('loginMsg').textContent='';entrar();}
@@ -421,7 +541,7 @@ async function handleCredentialResponse(resp){
 function logout(){
   api('avolar-logout',{}).catch(()=>{});
   token=null;usuario=null;vuelo=null;localStorage.removeItem('av_token');localStorage.removeItem('av_usuario');
-  clearInterval(tickTimer);$('btnLogout').classList.add('hidden');
+  clearInterval(tickTimer);
   $('appShell').classList.add('hidden');$('login').classList.remove('hidden');
 }
 
@@ -437,7 +557,7 @@ function navTo(id){
   if(id==='scrDir') cargarDirectorio();
 }
 async function entrar(){
-  $('login').classList.add('hidden');$('appShell').classList.remove('hidden');$('btnLogout').classList.remove('hidden');
+  $('login').classList.add('hidden');$('appShell').classList.remove('hidden');
   navTo('scrCrono');
   cargarAerodromos();
   await cargarAeronaves();
@@ -456,7 +576,13 @@ async function doStart(){
   const res=await api('avolar-timer-start',{});
   if(res&&res.ok){vuelo=res.vuelo;enCurso();} else toast('No se pudo iniciar');
 }
-function enCurso(){vista('vistaVuelo');$('mSalida').textContent=vuelo.hora_salida_z||'----';clearInterval(tickTimer);tick();tickTimer=setInterval(tick,1000)}
+function enCurso(){
+  vista('vistaVuelo');
+  $('mSalida').value=vuelo.hora_salida_z||'';
+  const ini=new Date(vuelo.inicio_utc+'Z');
+  $('mDespegue').textContent=pad(ini.getUTCHours())+':'+pad(ini.getUTCMinutes())+':'+pad(ini.getUTCSeconds());
+  clearInterval(tickTimer);tick();tickTimer=setInterval(tick,1000);
+}
 function tick(){
   if(!vuelo)return;
   const ini=new Date(vuelo.inicio_utc+'Z').getTime();
@@ -464,6 +590,7 @@ function tick(){
   const h=Math.floor(s/3600);s-=h*3600;const m=Math.floor(s/60);const sg=s-m*60;
   $('cron').textContent=pad(h)+':'+pad(m)+':'+pad(sg);
   const mins=(Date.now()-ini)/60000;$('mDecimas').textContent=(Math.round((mins/60)*10)/10).toFixed(1);
+  const ring=document.querySelector('#vistaVuelo .ring'); if(ring) ring.style.setProperty('--prog',((mins%60)/60).toFixed(3));
 }
 async function doStop(){
   if(!vuelo)return; if(!confirm('¿Terminar el vuelo?'))return;
@@ -499,10 +626,28 @@ async function loadAeronaves(){
   await cargarAeronaves();
   const b=$('aeroBody');
   if(!aeronaves.length){b.innerHTML='<div class="vacio">Todavía no cargaste aeronaves.<br>Tocá "+ Nueva" para agregar la primera.</div>';return;}
-  b.innerHTML=aeronaves.map(a=>`<div class="row" onclick='openAeroForm(${JSON.stringify(a.aeronave_id)})'>
-      <div class="main"><div class="r1">${esc(a.matricula)||'(sin matrícula)'} ${a.activa==='no'?'<span class="pill">inactiva</span>':''}</div>
-      <div class="r2">${esc([a.marca_modelo,a.clase,a.potencia,a.operador?('Op: '+a.operador):''].filter(Boolean).join(' · '))||'—'}</div></div>
-      <div class="dur"><div class="a">OACI</div><div class="r1">${esc(a.tipo_oaci)||'—'}</div></div></div>`).join('');
+  const activas=aeronaves.filter(a=>a.activa!=='no').length;
+  let html=`<div class="seclbl"><span>Aeronaves registradas (${aeronaves.length})</span><span>${activas} activa${activas===1?'':'s'}</span></div>`;
+  html+=aeronaves.map(a=>{
+    const on=a.activa!=='no';
+    const sub=[a.clase,a.tipo_oaci].filter(Boolean).map(esc).join(' • ')||'—';
+    const fpl=(a.equipo_fpl||a.vigilancia_fpl)?`<div class="afpl"><span>FPL casilla 10A / 10B</span><b>${esc(a.equipo_fpl||'—')} / ${esc(a.vigilancia_fpl||'—')}</b></div>`:'';
+    return `<div class="acard${on?'':' inact'}" onclick='openAeroForm(${JSON.stringify(a.aeronave_id)})'>
+      <div class="atop">
+        <div><div class="amat">${esc(a.matricula)||'(sin matrícula)'}<span>${esc(a.marca_modelo||'')}</span></div>
+        <div class="asub">${sub}</div></div>
+        <div class="statechip${on?' on':''}">${on?'Activa':'Inactiva'}</div>
+      </div>
+      <div class="aspecs">
+        <div class="sp"><div class="k">Potencia</div><div class="v">${esc(a.potencia)||'—'}</div></div>
+        <div class="sp"><div class="k">Equipos</div><div class="v am">${esc(a.equipo_fpl)||'—'}</div></div>
+        <div class="sp"><div class="k">Estela</div><div class="v">${esc(a.estela)||'L'}</div></div>
+      </div>
+      ${a.operador?`<div class="afpl"><span>Operador</span><b>${esc(a.operador)}</b></div>`:''}
+      ${fpl}
+    </div>`;
+  }).join('');
+  b.innerHTML=html;
 }
 function openAeroForm(id){
   const a=id?aeronaves.find(x=>x.aeronave_id===id):null;
@@ -551,29 +696,32 @@ function renderLibro(res){
   const t=res.totales||{};
   $('libroCount').textContent=res.cantidad+' vuelos';
   const anios=[...new Set(res.vuelos.map(v=>v.anio))].sort((a,b)=>b-a);
-  let html=`<div class="card"><div class="totgrid">
-      <div class="tot"><div class="k">Horas totales</div><div class="v big">${(t.total_general||0).toFixed(1)}</div></div>
-      <div class="tot"><div class="k">Aterrizajes</div><div class="v">${t.aterrizajes||0}</div></div>
-      <div class="tot"><div class="k">Vuelos</div><div class="v">${res.cantidad}</div></div>
-      <div class="tot"><div class="k">S/AD día</div><div class="v">${(t.sad_dia||0).toFixed(1)}</div></div>
-      <div class="tot"><div class="k">S/AD noche</div><div class="v">${(t.sad_noche||0).toFixed(1)}</div></div>
-      <div class="tot"><div class="k">Trav. día</div><div class="v">${(t.trav_dia||0).toFixed(1)}</div></div>
-      <div class="tot"><div class="k">Trav. noche</div><div class="v">${(t.trav_noche||0).toFixed(1)}</div></div>
-    </div></div>`;
-  html+=`<div style="display:flex;gap:8px;margin-bottom:12px"><button class="btn ghost sm" style="flex:1" onclick="exportExcel()">⬇️ Excel</button><button class="btn ghost sm" style="flex:1" onclick="exportPDF()">🖨️ PDF</button></div>`;
-  html+=`<div class="filtros">
-      <select id="fAnio" onchange="aplicarFiltros()"><option value="">Todos los años</option>${anios.map(a=>`<option>${a}</option>`).join('')}</select>
-      <input id="fAero" placeholder="Aeródromo (MOR)" oninput="aplicarFiltros()">
+  let html=`<div class="card totmain">
+      <div class="eyebrow">Horas totales acumuladas</div>
+      <div class="totbig"><span>${(t.total_general||0).toFixed(1)}</span><small>HS</small></div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="tk">Aterrizajes</div><div class="tv">${t.aterrizajes||0}</div></div>
+      <div class="tile"><div class="tk">S/AD día</div><div class="tv">${(t.sad_dia||0).toFixed(1)}<i>h</i></div></div>
+      <div class="tile"><div class="tk">S/AD noche</div><div class="tv">${(t.sad_noche||0).toFixed(1)}<i>h</i></div></div>
+      <div class="tile"><div class="tk">Vuelos</div><div class="tv">${res.cantidad}</div></div>
+      <div class="tile"><div class="tk">Trav. día</div><div class="tv">${(t.trav_dia||0).toFixed(1)}<i>h</i></div></div>
+      <div class="tile"><div class="tk">Trav. noche</div><div class="tv">${(t.trav_noche||0).toFixed(1)}<i>h</i></div></div>
     </div>`;
-  html+=`<button class="btn primary" style="margin-bottom:12px" onclick="openVuelo(null)">+ Cargar vuelo manual</button>`;
+  html+=`<div style="display:flex;gap:9px;margin-bottom:4px"><button class="btn ghost sm" style="flex:1" onclick="exportExcel()">⬇️ Excel</button><button class="btn ghost sm" style="flex:1" onclick="exportPDF()">🖨️ PDF</button></div>`;
   if(res.borradores&&res.borradores.length){
     window._borr=res.borradores;
-    html+=`<div style="color:var(--acento);font-size:13px;font-weight:600;margin:4px 0 8px">Sin completar (${res.borradores.length})</div>`;
-    html+=res.borradores.map((b,i)=>`<div class="row" onclick="completarBorrIdx(${i})">
-      <div class="main"><div class="r1">Borrador · ${esc(b.hora_salida_z)||'--'}–${esc(b.hora_llegada_z)||'--'} Z</div>
-      <div class="r2">${fdate(b)} · tocá para completar</div></div>
-      <div class="dur"><div class="d">${(b.duracion||0).toFixed(1)}</div><div class="a">dur</div></div></div>`).join('');
+    html+=`<div class="seclbl" style="color:var(--stop)"><span>⚠ Vuelos sin completar</span><span>${res.borradores.length} pendiente${res.borradores.length===1?'':'s'}</span></div>`;
+    html+=`<div class="draftcard">`+res.borradores.map((b,i)=>`<div class="row" onclick="completarBorrIdx(${i})">
+      <div class="main"><div class="r1">${esc(b.desde)||'?'} → ${esc(b.hacia)||'?'} <span class="pill">DRAFT</span></div>
+      <div class="r2">${fdate(b)} · ${esc(b.hora_salida_z)||'--'}–${esc(b.hora_llegada_z)||'--'}Z · tocá para completar</div></div>
+      <div class="dur"><div class="d">${(b.duracion||0).toFixed(1)}<small></small></div><div class="a">dur</div></div></div>`).join('')+`</div>`;
   }
+  html+=`<div class="filtros">
+      <div><span class="fl">Año</span><select id="fAnio" onchange="aplicarFiltros()"><option value="">Todos</option>${anios.map(a=>`<option>${a}</option>`).join('')}</select></div>
+      <div><span class="fl">AD</span><input id="fAero" placeholder="Todos" oninput="aplicarFiltros()"></div>
+    </div>`;
+  html+=`<div class="seclbl"><span>Historial reciente</span></div>`;
   html+=`<div id="libroList" class="listwrap"></div>`;
   $('libroBody').innerHTML=html;
   pintarLista(res.vuelos);
@@ -588,8 +736,8 @@ function pintarLista(vuelos){
   if(!vuelos.length){el.innerHTML='<div class="vacio">No hay vuelos con ese filtro.</div>';return;}
   el.innerHTML=vuelos.map((v,i)=>`<div class="row" onclick="abrirVueloIdx(${i})">
       <div class="main"><div class="r1">${esc(v.desde)||'?'} → ${esc(v.hacia)||'?'} <span class="pill">${esc(v.finalidad)}</span></div>
-      <div class="r2">${fdate(v)} · ${esc(v.matricula)} · sale ${esc(v.hora_salida_z)||'--'}Z</div></div>
-      <div class="dur"><div class="d">${(v.duracion||0).toFixed(1)}</div><div class="a">acum ${(v.acumulado?v.acumulado.total:0).toFixed(1)}</div></div></div>`).join('');
+      <div class="r2">${fdate(v)} · ${esc(v.matricula)} · DEP ${esc(v.hora_salida_z)||'--'}Z</div></div>
+      <div class="dur"><div class="d">${(v.duracion||0).toFixed(1)}<small> hs</small></div><div class="a">acum ${(v.acumulado?v.acumulado.total:0).toFixed(1)}</div></div></div>`).join('');
 }
 function aplicarFiltros(){
   const res=window._libro;if(!res)return;
@@ -665,7 +813,6 @@ function openVuelo(v){
   ['instruccion','capota','multimotor','reactor','turbohelice','aeroaplicador','simu'].forEach(k=>setV('v_'+k,(v[k]&&NUM(v[k]))?Number(v[k]).toFixed(1):''));
   $('v_foliado').checked=v.foliado==='si';
   setV('v_comentario',v.comentario);
-  // deducir selectores desde casillas existentes o sugerir
   const casillas=['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'];
   const conValor=casillas.find(k=>NUM(v[k])>0);
   if(conValor){const p=conValor.split('_');seg={cat:p[0],mom:p[1],rol:p[2]};}
@@ -676,8 +823,6 @@ function openVuelo(v){
 function autofillAeronave(){
   const a=aeronaves.find(x=>x.aeronave_id===$('v_aeronave').value);
   if(!a)return;
-  if(!$('v_finalidad').value) {}
-  $('v_desde');// keep
 }
 function setSeg(k,val){seg[k]=val;pintarSeg();volcar()}
 function pintarSeg(){
@@ -783,27 +928,27 @@ function dirSearch(){
   const top=res.slice(0,30);
   if(!top.length){ box.innerHTML='<div class="vacio">Sin resultados</div>'; return; }
   const CTRL={CONTROL:'Controlado',NOCONTROL:'No controlado',AERADIO:'AERADIO'};
-  box.innerHTML=top.map(({a})=>{
-    const codes=`ANAC: ${esc(a.anac||'—')} · IATA: ${esc(a.iata||'—')} · OACI: ${esc(a.oaci||'—')}${a.ext?` · FPL: ${esc(a.ext)}`:''}`;
-    const loc=[a.c,a.prov].filter(Boolean).map(esc).join(' · ');
-    const chips=[];
-    if(a.tipo) chips.push(`<span class="dchip">${esc(a.tipo)}</span>`);
-    if(a.ctrl) chips.push(`<span class="dchip">${esc(CTRL[a.ctrl]||a.ctrl)}</span>`);
-    if(a.traf==='Internacional') chips.push(`<span class="dchip intl">Internacional</span>`);
-    const meta=chips.length?`<div class="dmeta">${chips.join('')}</div>`:'';
-    const links=[];
-    if(a.mail) links.push(`<a class="dlink" href="mailto:${esc(a.mail)}"><span class="dl-k">✉️ ARO/AIS</span> ${esc(a.mail)}</a>`);
-    if(a.tel)  links.push(`<a class="dlink" href="${telHref(a.tel)}"><span class="dl-k">☎️ ARO/AIS</span> ${esc(a.tel)}</a>`);
-    if(a.telj) links.push(`<a class="dlink" href="${telHref(a.telj)}"><span class="dl-k">☎️ Jefe</span> ${esc(a.telj)}</a>`);
-    const contacts=links.length?`<div class="dcontacts">${links.join('')}</div>`:'';
-    return `<div class="card dircard${links.length?'':' nocontact'}">
-      <div class="dname">${esc(a.n)}</div>
-      <div class="dcodes">${codes}</div>
-      ${loc?`<div class="dloc">${loc}</div>`:''}
-      ${meta}
-      ${contacts}
+  let html=`<div class="seclbl"><span>Registros disponibles (${top.length})</span></div>`;
+  html+=top.map(({a})=>{
+    const cell=(k,v)=>`<div class="cc"><div class="cck">${k}</div><div class="ccv${v?'':' na'}">${esc(v||'—')}</div></div>`;
+    const grid=`<div class="codegrid">${cell('OACI',a.oaci)}${cell('ANAC',a.anac)}${cell('IATA',a.iata)}${cell('FPL',a.ext)}</div>`;
+    const loc=[a.c,a.prov].filter(Boolean).map(esc).join(', ');
+    const btns=[];
+    if(a.tel)  btns.push(`<a class="call" href="${telHref(a.tel)}"><span class="bk">📞 Llamar ARO</span><span class="bv">${esc(a.tel)}</span></a>`);
+    if(a.mail) btns.push(`<a href="mailto:${esc(a.mail)}"><span class="bk">✉️ Email plan</span><span class="bv">${esc(a.mail)}</span></a>`);
+    if(a.telj) btns.push(`<a class="call" href="${telHref(a.telj)}"><span class="bk">📞 Jefe AD</span><span class="bv">${esc(a.telj)}</span></a>`);
+    const btnsHTML=btns.length?`<div class="dbtns">${btns.join('')}</div>`:'';
+    return `<div class="dircard">
+      <div class="dtop">
+        <div><div class="dname">${esc(a.n)}</div>${loc?`<div class="dloc">${loc}</div>`:''}</div>
+        <div class="dbadges">${a.traf==='Internacional'?'<span class="intl">Internacional</span>':''}<div class="dtipo">${esc(a.tipo||'')}</div></div>
+      </div>
+      ${a.ctrl?`<div class="dctrl">${esc(CTRL[a.ctrl]||a.ctrl)}</div>`:''}
+      ${grid}
+      ${btnsHTML}
     </div>`;
   }).join('');
+  box.innerHTML=html;
 }
 
 /* arranque */
