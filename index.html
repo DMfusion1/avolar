@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
 <meta name="theme-color" content="#060c16">
 <title>Volemos Hoy</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -45,7 +46,7 @@
   .scrhead .count{font-family:var(--mono); color:var(--acento); font-size:12px; font-weight:700; letter-spacing:1px; white-space:nowrap}
   .zchip{display:inline-flex; flex-direction:column; align-items:flex-end; border:1px solid var(--linea2); border-radius:13px; padding:6px 13px; background:rgba(255,255,255,.03)}
   .zchip .zk{font-family:var(--mono); font-size:8.5px; letter-spacing:2px; color:var(--tenue)}
-  .zchip .zv{font-family:var(--mono); font-size:16px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums; margin-top:1px}
+  .zchip .zv{font-family:var(--mono); font-size:16px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums; margin-top:1px; white-space:nowrap}
   .zchip .zv .dot{color:var(--ok); font-size:11px; vertical-align:middle; margin-right:3px}
 
   /* slim appbar */
@@ -90,14 +91,14 @@
   .ring::before{content:""; position:absolute; inset:15px; border-radius:50%; background:radial-gradient(circle at 50% 40%,#0e1f3a,#0a1526); border:1px solid var(--linea)}
   .ringc{position:relative; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px}
   .ringc .rk{font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--tenue); text-transform:uppercase}
-  .cron{font-family:var(--mono); font-size:44px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums; letter-spacing:1px}
+  .cron{font-family:var(--mono); font-size:42px; font-weight:700; color:var(--acento); font-variant-numeric:tabular-nums; letter-spacing:0; white-space:nowrap}
   .decpill{font-family:var(--mono); font-size:12px; color:var(--texto); border:1px solid var(--linea2); border-radius:20px; padding:4px 12px}
   .decpill b{color:var(--acento); font-size:15px}
   .decpill span{color:var(--tenue); font-size:9.5px; letter-spacing:1px}
   .offgrid{display:flex; gap:10px; width:100%; margin-top:2px}
   .offcell{flex:1; background:var(--card); border:1px solid var(--linea); border-radius:14px; padding:11px 12px; text-align:center}
   .offcell .k{font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--tenue); text-transform:uppercase}
-  .offcell .v{font-family:var(--mono); font-size:19px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px}
+  .offcell .v{font-family:var(--mono); font-size:19px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:3px; white-space:nowrap}
   .offcell .v.z{color:var(--cielo)}
   .cronbtns{display:flex; gap:10px; width:100%}
   .cronbtns .btn{flex:1}
