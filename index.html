@@ -2,7 +2,7 @@
 <html lang="es-AR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
 <meta name="theme-color" content="#060c16">
 <title>Volemos Hoy</title>
@@ -191,7 +191,7 @@
   .field.row2>div{flex:1; min-width:0}
   .casillas>.field{min-width:0}
   label{display:block; color:var(--tenue); font-family:var(--mono); font-size:10.5px; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; font-weight:600}
-  input,select,textarea{width:100%; min-width:0; max-width:100%; box-sizing:border-box; background:var(--inset); border:1px solid var(--linea2); border-radius:11px; padding:12px 13px; color:var(--texto); font-size:15px; font-family:inherit}
+  input,select,textarea{width:100%; min-width:0; max-width:100%; box-sizing:border-box; background:var(--inset); border:1px solid var(--linea2); border-radius:11px; padding:12px 13px; color:var(--texto); font-size:16px; font-family:inherit}
   input:focus,select:focus,textarea:focus{outline:none; border-color:var(--cielo)}
   textarea{resize:vertical; min-height:60px}
   select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238ea3c2' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px}
@@ -221,8 +221,10 @@
   /* ===== DIRECTORIO ===== */
   .search{display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--linea2); border-radius:13px; padding:12px 14px; margin-bottom:14px}
   .search svg{width:18px;height:18px;stroke:var(--tenue);flex-shrink:0}
-  .search input{background:none; border:none; padding:0; font-size:15px}
+  .search input{background:none; border:none; padding:0; font-size:16px}
   .search input:focus{border:none}
+  .search .searchx{background:none; border:none; color:var(--tenue); font-size:16px; line-height:1; cursor:pointer; padding:4px 2px; flex-shrink:0}
+  .search .searchx:active{color:var(--texto)}
   .dircard{background:var(--card); border:1px solid var(--linea); border-radius:16px; padding:15px; margin-bottom:12px}
   .dircard .dtop{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
   .dircard .dname{font-weight:800; font-size:17px; line-height:1.2; letter-spacing:.3px}
@@ -487,7 +489,8 @@
       <div class="listwrap">
         <div class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-          <input id="dirQ" placeholder="Nombre, localidad o código…" autocomplete="off" oninput="dirSearch()">
+          <input id="dirQ" placeholder="Nombre, localidad o código…" autocomplete="off" oninput="dirSearch()" onfocus="dirToggleClear()">
+          <button id="dirClear" class="searchx hidden" onclick="dirLimpiar()" aria-label="Borrar búsqueda">✕</button>
         </div>
         <div class="hint">Aeródromos: ANAC (Transporte). Mails y teléfonos ARO/AIS: EANA. Tel. del jefe de aeródromo cuando está publicado. Los aeródromos chicos suelen no tener oficina de contacto.</div>
         <div id="dirRes"></div>
@@ -920,10 +923,12 @@ async function cargarDirectorio(){
   try{ window._dir=await fetch('/directorio.json').then(r=>r.json()); }catch(e){ window._dir=[]; }
 }
 function telHref(p){ return 'tel:'+String(p).replace(/[^0-9+]/g,''); }
-function dirLimpiar(){ $('dirQ').value=''; $('dirRes').innerHTML=''; $('dirQ').focus(); }
+function dirToggleClear(){ $('dirClear').classList.toggle('hidden', !$('dirQ').value); }
+function dirLimpiar(){ $('dirQ').value=''; $('dirRes').innerHTML=''; dirToggleClear(); $('dirQ').focus(); }
 function dirSearch(){
   const q=norm($('dirQ').value.trim());
   const box=$('dirRes');
+  dirToggleClear();
   if(q.length<2||!window._dir||!window._dir.length){ box.innerHTML=''; return; }
   const res=[];
   for(const a of window._dir){
