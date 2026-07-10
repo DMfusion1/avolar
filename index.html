@@ -404,8 +404,8 @@
       <div class="listwrap">
         <div class="field"><label>Fecha</label><input type="date" id="v_fecha"></div>
         <div class="field row2">
-          <div><label>Hora salida (Z)</label><input id="v_hsal" inputmode="numeric" maxlength="4" placeholder="1340"></div>
-          <div><label>Hora llegada (Z)</label><input id="v_hlleg" inputmode="numeric" maxlength="4" placeholder="1450"></div>
+          <div><label>Hora salida (Z)</label><input id="v_hsal" inputmode="numeric" maxlength="4" placeholder="1340" oninput="calcDur()"></div>
+          <div><label>Hora llegada (Z)</label><input id="v_hlleg" inputmode="numeric" maxlength="4" placeholder="1450" oninput="calcDur()"></div>
         </div>
         <div class="field row2">
           <div class="ac-wrap"><label>Desde</label><input id="v_desde" placeholder="MOR o Morón" autocomplete="off" oninput="acSearch('desde')" onfocus="acSearch('desde')" onblur="acBlur('desde')"><div class="ac-list hidden" id="ac_desde"></div></div>
@@ -761,7 +761,7 @@ function aplicarFiltros(){
   if(aero) vs=vs.filter(v=>(v.desde||'').toUpperCase().includes(aero)||(v.hacia||'').toUpperCase().includes(aero));
   pintarLista(vs);
 }
-function completarBorrador(b){openVuelo({vuelo_id:b.vuelo_id,estado:'borrador',anio:b.anio,mes:b.mes,dia:b.dia,hora_salida_z:b.hora_salida_z,hora_llegada_z:b.hora_llegada_z,duracion:b.duracion,desde:b.desde,hacia:b.hacia})}
+function completarBorrador(b){openVuelo(Object.assign({},b,{estado:'borrador'}))}
 
 /* ---- EXPORTAR ---- */
 function d1(x){x=Number(x);return isFinite(x)&&x>0?x.toFixed(1):'-'}
@@ -821,6 +821,7 @@ function openVuelo(v){
   $('v_fecha').value=`${anio}-${pad(mes)}-${pad(dia)}`;
   setV('v_hsal',v.hora_salida_z);setV('v_hlleg',v.hora_llegada_z);
   setV('v_desde',v.desde);setV('v_hacia',v.hacia);setV('v_finalidad',v.finalidad);
+  window._durAuto='';
   setV('v_aeronave',v.aeronave_id);setV('v_duracion',v.duracion?Number(v.duracion).toFixed(1):'');
   setV('v_aterrizajes',v.aterrizajes);
   ['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'].forEach(k=>{const val=v[k];$('c_'+k).value=(val&&NUM(val))?Number(val).toFixed(1):''});
@@ -872,6 +873,20 @@ function acSearch(which){
 }
 function acPick(which,code){ $('v_'+which).value=code; $('ac_'+which).classList.add('hidden'); sugerirCategoria(); }
 function acBlur(which){ setTimeout(()=>$('ac_'+which).classList.add('hidden'),200); }
+function calcDur(){
+  const hs=$('v_hsal').value.trim(), hl=$('v_hlleg').value.trim();
+  const hint=$('durHint');
+  if(!/^\d{4}$/.test(hs)||!/^\d{4}$/.test(hl)) return;
+  const sh=+hs.slice(0,2),sm=+hs.slice(2),lh=+hl.slice(0,2),lm=+hl.slice(2);
+  if(sh>23||lh>23||sm>59||lm>59) return;
+  let diff=(lh*60+lm)-(sh*60+sm); if(diff<0) diff+=1440;
+  const dur=(Math.round((diff/60)*10)/10).toFixed(1);
+  const cur=$('v_duracion').value.trim();
+  if(cur===''||cur===window._durAuto){
+    $('v_duracion').value=dur; window._durAuto=dur; volcar();
+    if(hint) hint.textContent='Calculado de salida/llegada · editable';
+  }
+}
 function volcar(){
   const dur=NUM($('v_duracion').value);
   ['sad_dia_pil','sad_dia_cop','sad_noche_pil','sad_noche_cop','trav_dia_pil','trav_dia_cop','trav_noche_pil','trav_noche_cop'].forEach(k=>$('c_'+k).value='');
